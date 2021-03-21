@@ -24,10 +24,6 @@
             "error",
             "always"
         ],
-        "quotes": [
-            "error",
-            "double"
-        ],
         "react/jsx-filename-extension": [
             1,
             {
