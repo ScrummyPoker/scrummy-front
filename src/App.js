@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react';
-import io from 'socket.io-client';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import Home from './components/Home';
+import ChatRoom from './components/ChatRoom';
 
 function App() {
-  useEffect(() => {
-    const socket = io('http://localhost:3000', { transports: ['websocket'] });
-    socket.on('connect', () => console.log('Front connected'));
-  }, []);
-
   return (
-    <div>
-      Hello World!
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/:username/:roomId" component={ChatRoom} />
+      </Switch>
+    </Router>
   );
 }
 
