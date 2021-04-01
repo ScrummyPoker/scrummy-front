@@ -5,10 +5,12 @@ import useChat from './useChat';
 const ChatRoom = (props) => {
   const { roomId } = props.match.params; // Gets roomId from URL
   const { username } = props.match.params; // Gets roomId from URL
+
+  const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
+
   const {
     messages, sendMessage, goToNextPage, getUsersOnChat,
   } = useChat({ username, roomId });
-  const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
 
   const handleNewMessageChange = (event) => {
     setNewMessage(event.target.value);

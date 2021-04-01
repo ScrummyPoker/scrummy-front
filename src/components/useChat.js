@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import socketIOClient from 'socket.io-client';
 
-const NEW_CHAT_MESSAGE_EVENT = 'joinRoom'; // Name of the event
-const NEW_MESSAGE_EVENT = 'chatMessage'; // Name of the event
-const GO_NEXT_PAGE_EVENT = 'goToNextPage'; // Name of the event
+const NEW_CHAT_MESSAGE_EVENT = 'joinRoom';
+const NEW_MESSAGE_EVENT = 'chatMessage';
+const GO_NEXT_PAGE_EVENT = 'goToNextPage';
 const GET_ALL_USER_EVENT = 'roomUsers';
 
 const SOCKET_SERVER_URL = 'http://localhost:3000';
 
 const useChat = ({ username, roomId }) => {
-  const [messages, setMessages] = useState([]); // Sent and received messages
+  const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]); // Users on chat
   const socketRef = useRef();
 
