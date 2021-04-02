@@ -3,14 +3,18 @@ import React from 'react';
 import useChat from './useChat';
 
 const ChatRoom = (props) => {
-  const { roomId } = props.match.params; // Gets roomId from URL
-  const { username } = props.match.params; // Gets roomId from URL
+  const { lobbyCode } = props.match.params;
+  const { playerId } = props.match.params;
 
   const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
+  const [cardChosen, setCardChosen] = React.useState(null);
 
   const {
-    messages, sendMessage, goToNextPage, getUsersOnChat,
-  } = useChat({ username, roomId });
+    cardMessages,
+    sendMessage,
+    sendCardMessage,
+    getPlayersInLobby,
+  } = useChat({ playerId, lobbyCode });
 
   const handleNewMessageChange = (event) => {
     setNewMessage(event.target.value);
@@ -21,41 +25,40 @@ const ChatRoom = (props) => {
     setNewMessage('');
   };
 
+  React.useEffect(() => {
+    sendCardMessage(cardChosen);
+  }, [cardChosen]);
+
   return (
     <div className="chat-room-container">
       <h1 className="room-name">
-        Room:
-        {roomId}
-        Username:
-        {username}
+        lobbyCode:
+        {lobbyCode}
+        playerId:
+        {playerId}
       </h1>
       <div className="messages-container">
         <ol className="messages-list">
-          {messages.map((message, i) => (
-            <li
-              key={i}
-              className={`message-item ${message.ownedByCurrentUser ? 'my-message' : 'received-message'}`}
-            >
-              {message.text}
-            </li>
+          {cardMessages.map((message, i) => (
+            <li key={i}>{message.text.cardChosen}</li>
           ))}
         </ol>
       </div>
-      <textarea
-        value={newMessage}
-        onChange={handleNewMessageChange}
-        placeholder="Write message..."
-        className="new-message-input-field"
-      />
-      <button type="button" onClick={handleSendMessage} className="send-message-button">
-        Send
-      </button>
-      <button type="button" onClick={goToNextPage} className="send-message-button">
-        Go to Next Page
-      </button>
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+        <button type="button" href="#" onClick={() => setCardChosen(index)}>
+          {index}
+        </button>
+      ))}
+
+      {cardChosen && (
+        <button type="button" onClick={() => setCardChosen(null)} className="">
+          clear card
+        </button>
+      )}
+
       <div>
         <ol>
-          {getUsersOnChat().map((user, i) => (
+          {getPlayersInLobby().map((user, i) => (
             <li key={i}>{user.username}</li>
           ))}
         </ol>

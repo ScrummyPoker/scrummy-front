@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/:username/:roomId" component={ChatRoom} />
+        <Route exact path="/:playerId/:lobbyCode" component={ChatRoom} />
       </Switch>
     </Router>
   );

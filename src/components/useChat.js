@@ -1,31 +1,43 @@
 import React, { useEffect, useRef, useState } from 'react';
 import socketIOClient from 'socket.io-client';
 
-const NEW_CHAT_MESSAGE_EVENT = 'joinRoom';
+const NEW_CHAT_MESSAGE_EVENT = 'joinLobby';
 const NEW_MESSAGE_EVENT = 'chatMessage';
 const GO_NEXT_PAGE_EVENT = 'goToNextPage';
-const GET_ALL_USER_EVENT = 'roomUsers';
+const GET_ALL_USER_EVENT = 'lobbyInfo';
 
-const SOCKET_SERVER_URL = 'http://localhost:3000';
+const CARD_MESSAGE_EVENT = 'cardMessage';
+const LOBBY_MESSAGE_EVENT = 'lobbyMessage';
 
-const useChat = ({ username, roomId }) => {
+const SOCKET_SERVER_URL = 'http://localhost:4444';
+
+const useChat = ({ playerId, lobbyCode }) => {
   const [messages, setMessages] = useState([]);
-  const [users, setUsers] = useState([]); // Users on chat
+  const [cardMessages, setCardMessages] = useState([]);
+  const [players, setPlayers] = useState([]);
   const socketRef = useRef();
 
   useEffect(() => {
     // Creates a WebSocket connection
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
-      query: { roomId },
+      query: { lobbyCode },
       transports: ['websocket'],
     });
 
     // join room
-    socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, { username, room: roomId });
+    socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
+      playerId,
+      room: lobbyCode,
+    });
 
     // Listens for incoming messages
     socketRef.current.on(NEW_MESSAGE_EVENT, (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    // Listens for incoming CARD messages
+    socketRef.current.on(CARD_MESSAGE_EVENT, (cardMessageData) => {
+      setCardMessages((prevMessages) => [...prevMessages, cardMessageData]);
     });
 
     // Go to next page
@@ -37,7 +49,7 @@ const useChat = ({ username, roomId }) => {
 
     // Get all user on room
     socketRef.current.on(GET_ALL_USER_EVENT, (userList) => {
-      setUsers(userList.users);
+      setPlayers(userList.players);
       // setMessages((prevMessages) => [...prevMessages, message]);
     });
 
@@ -46,29 +58,32 @@ const useChat = ({ username, roomId }) => {
     return () => {
       socketRef.current.disconnect();
     };
-  }, [roomId]);
+  }, [lobbyCode]);
 
   // Sends a message to the server that
   // forwards it to all users in the same room
-  const sendMessage = (message) => {
-    socketRef.current.emit(NEW_MESSAGE_EVENT, {
-      message,
-      roomId,
-      username,
-      // senderId: socketRef.current.id,
+  const sendCardMessage = (cardChosen) => {
+    socketRef.current.emit(CARD_MESSAGE_EVENT, {
+      cardChosen,
+      lobbyCode,
+      playerId,
     });
   };
 
   const goToNextPage = () => {
     socketRef.current.emit(GO_NEXT_PAGE_EVENT, {
-      roomId,
+      lobbyCode,
     });
   };
 
-  const getUsersOnChat = () => users;
+  const getPlayersInLobby = () => players;
 
   return {
-    messages, sendMessage, goToNextPage, getUsersOnChat,
+    messages,
+    cardMessages,
+    sendCardMessage,
+    goToNextPage,
+    getPlayersInLobby,
   };
 };
 
