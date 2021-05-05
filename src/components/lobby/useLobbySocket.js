@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
 const NEW_CHAT_MESSAGE_EVENT = 'joinLobby';
 const NEW_MESSAGE_EVENT = 'chatMessage';
@@ -9,14 +9,16 @@ const ADMIN_ACTION = 'adminAction';
 
 const CARD_MESSAGE_EVENT = 'cardMessage';
 const LOBBY_MESSAGE_EVENT = 'lobbyMessage';
+const LOBBY_NEW_PLAYER = 'newPlayer';
 
 const SOCKET_SERVER_URL = 'http://localhost:4444';
 
-const useChat = ({ playerId, lobbyCode }) => {
+const useLobbySocket = ({ playerId, lobbyCode }) => {
   const [messages, setMessages] = useState([]);
   const [cardMessages, setCardMessages] = useState([]);
   const [players, setPlayers] = useState([]);
   const [lobbyInfo, setLobbyInfo] = useState(null);
+  const [adminAction, setAdminAction] = useState(null);
   const socketRef = useRef();
 
   useEffect(() => {
@@ -41,6 +43,17 @@ const useChat = ({ playerId, lobbyCode }) => {
     socketRef.current.on(CARD_MESSAGE_EVENT, cardMessageData => {
       updateCardResults(cardMessageData);
     });
+
+    // Listens for incoming NEW PLAYER
+    socketRef.current.on(LOBBY_NEW_PLAYER, playersMessageData => {
+      setPlayers(playersMessageData.players);
+    });
+
+    // Listens for incoming NEW PLAYER
+    socketRef.current.on(ADMIN_ACTION, adminMessageData => {
+      setAdminAction(adminMessageData);
+    });
+
     // Go to next page
     socketRef.current.on(GO_NEXT_PAGE_EVENT, url => {
       console.log(url);
@@ -48,10 +61,8 @@ const useChat = ({ playerId, lobbyCode }) => {
       // setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    // Get all user on room
     socketRef.current.on(LOBBY_INFO, lobbyInfo => {
       setLobbyInfo(lobbyInfo);
-      // setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     // Destroys the socket reference
@@ -110,7 +121,9 @@ const useChat = ({ playerId, lobbyCode }) => {
     cardMessages,
     sendCardMessage,
     startGame,
+    players,
+    adminAction,
   };
 };
 
-export default useChat;
+export default useLobbySocket;
