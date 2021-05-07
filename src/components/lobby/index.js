@@ -15,7 +15,7 @@ import LobbyContainer from './useContainer';
 
 const LobbyPage = props => {
   const { lobbyCode } = props.match.params;
-  const { playerId } = props.match.params;
+  const playerId = getUserLogged().id;
 
   const { lobbyData, setLobbyData, handleDeleteLobby, goBack } = useContainer(
     props,
@@ -30,7 +30,11 @@ const LobbyPage = props => {
           <button onClick={handleDeleteLobby}>Delete lobby</button>
           <button>Leave lobby</button>
 
-          <LobbyInfo lobbyCode={lobbyCode} playerId={playerId} />
+          <LobbyInfo
+            lobbyData={lobbyData}
+            lobbyCode={lobbyCode}
+            playerId={playerId}
+          />
         </>
       ) : (
         <p>Loading...</p>

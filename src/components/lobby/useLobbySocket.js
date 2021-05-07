@@ -49,7 +49,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
       setPlayers(playersMessageData.players);
     });
 
-    // Listens for incoming NEW PLAYER
+    // Listens for incoming ADMIN_ACTION
     socketRef.current.on(ADMIN_ACTION, adminMessageData => {
       setAdminAction(adminMessageData);
     });
@@ -76,7 +76,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
   // forwards it to all users in the same room
   const sendCardMessage = cardChosen => {
     const newCardData = {
-      cardChosen,
+      cardChosen: cardChosen,
       lobbyCode,
       player: {
         id: playerId,
@@ -88,9 +88,26 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
   };
 
   const startGame = () => {
+    emitAdminAction('STARTED');
+  };
+
+  const showResults = () => {
+    emitAdminAction('SHOWING_RESULTS');
+  };
+
+  const clearResults = () => {
+    emitAdminAction('CLEAR_RESULTS');
+  };
+
+  const hideResults = () => {
+    emitAdminAction('HIDE_RESULTS');
+  };
+
+  const emitAdminAction = action => {
     socketRef.current.emit(ADMIN_ACTION, {
+      player: { id: playerId },
       lobbyCode,
-      action: 'START_GAME',
+      action: action,
     });
   };
 
@@ -102,11 +119,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
       );
 
       if (actualPlayerIndex > -1) {
-        if (newCardData.cardChosen) {
-          newCards[actualPlayerIndex] = newCardData;
-        } else {
-          newCards.splice(actualPlayerIndex, 1);
-        }
+        newCards[actualPlayerIndex] = newCardData;
       } else {
         newCards.push({ ...newCardData });
       }
@@ -123,6 +136,9 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
     startGame,
     players,
     adminAction,
+    showResults,
+    clearResults,
+    hideResults,
   };
 };
 

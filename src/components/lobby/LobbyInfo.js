@@ -1,13 +1,13 @@
 import React from 'react';
+import { getFibonacci } from '../../constants/Fibonacci';
 
 import useLobbySocket from './useLobbySocket';
 
-const LobbyInfo = ({ playerId, lobbyCode }) => {
+const LobbyInfo = ({ playerId, lobbyCode, lobbyData }) => {
   const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
   const [cardChosen, setCardChosen] = React.useState(null);
-
   const [gameStarted, setGameStarted] = React.useState(false);
-  const [showResults, setShowResults] = React.useState(false);
+  const [showingResults, setShowingResults] = React.useState(false);
 
   const {
     lobbyInfo,
@@ -17,6 +17,10 @@ const LobbyInfo = ({ playerId, lobbyCode }) => {
     getPlayersInLobby,
     startGame,
     players,
+    adminAction,
+    showResults,
+    clearResults,
+    hideResults,
   } = useLobbySocket({ playerId, lobbyCode });
 
   const handleNewMessageChange = event => {
@@ -29,14 +33,60 @@ const LobbyInfo = ({ playerId, lobbyCode }) => {
   };
 
   React.useEffect(() => {
-    if (!!cardChosen) {
-      sendCardMessage(cardChosen);
-    }
+    sendCardMessage(cardChosen);
   }, [cardChosen]);
 
-  React.useEffect(() => gameStarted && startGame(), [gameStarted]);
+  React.useEffect(() => {
+    if (adminAction) {
+      if (adminAction.action === 'STARTED' && !gameStarted) {
+        setGameStarted(true);
+      }
 
-  React.useEffect(() => {}, [lobbyInfo]);
+      if (adminAction.action === 'CLEAR_RESULTS') {
+        setCardChosen(null);
+      }
+
+      if (adminAction.action === 'SHOWING_RESULTS' && !showingResults) {
+        setShowingResults(true);
+      }
+
+      if (adminAction.action === 'HIDE_RESULTS' && showingResults) {
+        setShowingResults(false);
+      }
+
+      if (adminAction.action === 'STOP' && showingResults) {
+        setGameStarted(false);
+        setCardChosen(null);
+        setShowingResults(false);
+      }
+    }
+  }, [adminAction]);
+
+  const handleShowResults = () => {
+    showResults();
+    setShowingResults(true);
+  };
+
+  const handleClearResults = () => {
+    clearResults();
+    handleHideResults();
+  };
+
+  const handleHideResults = () => {
+    hideResults();
+    setShowingResults(false);
+  };
+
+  const handleAdminStartGame = () => {
+    startGame();
+    setGameStarted(true);
+  };
+
+  React.useEffect(() => {}, []);
+
+  const isPlayerAdminInLobby = () => {
+    return lobbyData.admins.indexOf(playerId) > -1;
+  };
 
   return (
     <div className="chat-room-container">
@@ -49,17 +99,22 @@ const LobbyInfo = ({ playerId, lobbyCode }) => {
       <div>{!!lobbyInfo && JSON.stringify(lobbyInfo)}</div>
       <div className="messages-container">
         <ol className="messages-list">
-          {cardMessages.map((cardMessage, i) => (
-            <li key={i}>
-              Player ({cardMessage.player.id}): <b>{cardMessage.cardChosen}</b>
-            </li>
-          ))}
+          {showingResults && (
+            <>
+              {cardMessages.map((cardMessage, i) => (
+                <li key={i}>
+                  Player ({cardMessage.player.id}):{' '}
+                  <b>{cardMessage.cardChosen}</b>
+                </li>
+              ))}
+            </>
+          )}
         </ol>
       </div>
 
       {gameStarted && (
         <>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(index => (
+          {[...new Set(getFibonacci(8))].map(index => (
             <button type="button" href="#" onClick={() => setCardChosen(index)}>
               {index}
             </button>
@@ -81,21 +136,23 @@ const LobbyInfo = ({ playerId, lobbyCode }) => {
       {players.map((player, i) => (
         <li key={i}>Player {JSON.stringify(player)}</li>
       ))}
-      <button
-        onClick={() => {
-          setGameStarted(!gameStarted);
-        }}
-      >
-        {gameStarted ? 'stop game' : 'start game'}
-      </button>
 
-      <button
-        onClick={() => {
-          setShowResults(true);
-        }}
-      >
-        show results
-      </button>
+      {isPlayerAdminInLobby() && (
+        <>
+          <button onClick={handleAdminStartGame}>
+            {gameStarted ? 'stop game' : 'start game'}
+          </button>
+
+          {showingResults ? (
+            <>
+              <button onClick={handleHideResults}>hide results</button>
+              <button onClick={handleClearResults}>clear results</button>
+            </>
+          ) : (
+            <button onClick={handleShowResults}>show results</button>
+          )}
+        </>
+      )}
     </div>
   );
 };
