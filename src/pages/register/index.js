@@ -1,5 +1,8 @@
 import React from 'react';
-import { postRegister } from '../../../api/auth';
+import { postRegister } from '../../api/auth';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { ROUTE_AUTH_LOGIN } from '../../utils/routes';
 
 const RegisterPage = props => {
   const [isError, setIsError] = React.useState(null);
@@ -60,29 +63,43 @@ const RegisterPage = props => {
   return (
     <>
       {isError && <p>An error has occurred when trying to register</p>}
+      <div className="grid grid-cols-1 gap-4">
+        <div>
+          <Input
+            label={"Your name:"}
+            name="name"
+            type={'text'}
+            placeholder={'ex: gabriel toledo'}
+            onChange={handelFormChange}
+          />
+        </div>
 
-      <input
-        name="name"
-        type={'text'}
-        placeholder={'your name'}
-        onChange={handelFormChange}
-      />
+        <div>
+          <Input
+            label={"Your e-mail:"}
+            name="email"
+            type={'email'}
+            placeholder={'ex: fallen@email.com'}
+            onChange={handelFormChange}
+          />
+        </div>
+        <div>
+          <Input
+            label={"Choose a password:"}
+            name="password"
+            type={'password'}
+            placeholder={'*******'}
+            onChange={handelFormChange}
+          />
+        </div>
 
-      <input
-        name="email"
-        type={'email'}
-        placeholder={'your email'}
-        onChange={handelFormChange}
-      />
+        <Button onClick={handleRegister}>Create account</Button>
 
-      <input
-        name="password"
-        type={'password'}
-        placeholder={'your password'}
-        onChange={handelFormChange}
-      />
+        <a className="italic text-center" href={ROUTE_AUTH_LOGIN}>
+          I already have an account
+        </a>
 
-      <button onClick={handleRegister}>registrar</button>
+      </div>
     </>
   );
 };

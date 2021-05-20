@@ -8,10 +8,8 @@ import {
 import { getUserLogged } from '../../services/auth';
 import { readCookie, SCRUM_USER_REFRESH_TOKEN } from '../../utils/cookies';
 import { ROUTE_DASHBOARD } from '../../utils/routes';
-import { useInput } from '../_shared/form/input/useInput';
 import LobbyInfo from './LobbyInfo';
 import useContainer from './useContainer';
-import LobbyContainer from './useContainer';
 
 const LobbyPage = props => {
   const { lobbyCode } = props.match.params;

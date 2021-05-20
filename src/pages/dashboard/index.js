@@ -3,7 +3,8 @@ import { generatePath, Link } from 'react-router-dom';
 import { createLobby, enterLobbyByCode } from '../../api/lobby';
 import { getUserLogged } from '../../services/auth';
 import { buildURL, ROUTE_LOBBY } from '../../utils/routes';
-import { useInput } from '../_shared/form/input/useInput';
+import Input from '../../components/Input';
+import useInput from '../../components/Input/useInput';
 
 const Dashboard = props => {
   const {
@@ -50,7 +51,7 @@ const Dashboard = props => {
   return (
     <div className="Dashboard-container">
       <div>
-        <input
+        <Input
           type="text"
           placeholder="Create new lobby"
           className="text-input-field"
@@ -60,7 +61,7 @@ const Dashboard = props => {
         <button onClick={handleCreateNewLobby}>Create lobby</button>
       </div>
       <div>
-        <input
+        <Input
           type="text"
           placeholder="Join existing lobby"
           className="text-input-field"
