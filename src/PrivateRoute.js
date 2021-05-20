@@ -4,10 +4,10 @@ import { isLoggedIn } from './services/auth';
 import DashboardLayout from './components/_shared/layout/DashboardLayout';
 import { ROUTE_AUTH_LOGIN } from './utils/routes';
 
-const PrivateRoute = ({ component: Component }) => {
+const PrivateRoute = ({ path, component: Component }) => {
   return (
     <Route
-      strict
+      path={path}
       exact
       render={props => {
         if (isLoggedIn()) {

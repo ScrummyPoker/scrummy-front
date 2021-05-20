@@ -5,23 +5,26 @@ import { getUserLogged } from '../../services/auth';
 import { buildURL, ROUTE_LOBBY } from '../../utils/routes';
 import Input from '../../components/Input';
 import useInput from '../../components/Input/useInput';
+import Button from '../../components/Button';
 
 const Dashboard = props => {
-  const {
-    value: newLobbyCode,
-    bind: bindNewLobbyCode,
-    reset: resetNewLobbyCode,
-  } = useInput('');
-  const {
-    value: existingLobbyName,
-    bind: bindExistingLobbyName,
-    reset: resetExistingLobbyName,
-  } = useInput('');
+  const [isLoadingCreate, setIsLoadingCreate] = React.useState(false);
+  const [isLoadingJoin, setIsLoadingJoin] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+
+  const newLobbyCode = useInput('');
+  const existingLobbyName = useInput('');
 
   const handleCreateNewLobby = async () => {
+    if(!newLobbyCode.value) {
+      return setIsError(true);
+    }
+
+    setIsLoadingCreate(true);
+
     const newLobby = await createLobby({
       userId: getUserLogged().id,
-      lobbyCode: newLobbyCode,
+      lobbyCode: newLobbyCode.value,
     });
 
     if (newLobby) {
@@ -34,43 +37,54 @@ const Dashboard = props => {
   };
 
   const joinExistingLobby = async () => {
+    if(!existingLobbyName.value) {
+      return setIsError(true);
+    }
+    
+    setIsLoadingJoin(true);
+
     const existingLobby = await enterLobbyByCode({
       userId: getUserLogged().id,
-      lobbyCode: existingLobbyName,
+      lobbyCode: existingLobbyName.value,
     });
 
     if (existingLobby) {
       props.history.push(
         generatePath(ROUTE_LOBBY, {
           lobbyCode: existingLobby.code,
-        }),
+        }), { update: true }
       );
     }
   };
 
   return (
-    <div className="Dashboard-container">
+    <>
+      {isError && <p>An error has occurred when trying to enter lobby</p>}
+      
       <div>
         <Input
+          label="Create new lobby"
           type="text"
-          placeholder="Create new lobby"
-          className="text-input-field"
-          {...bindNewLobbyCode}
+          placeholder="Ex: planning-spacex"
+          styleClass="text-input-field"
+          {...newLobbyCode}
         />
 
-        <button onClick={handleCreateNewLobby}>Create lobby</button>
+        <Button isLoading={isLoadingCreate} onClick={handleCreateNewLobby}>
+          Create lobby
+        </Button>
       </div>
-      <div>
+      <div className={'mt-2'}>
         <Input
+          label="Join existing lobby"
           type="text"
-          placeholder="Join existing lobby"
-          className="text-input-field"
-          {...bindExistingLobbyName}
+          placeholder="Enter existing lobby code"
+          {...existingLobbyName}
         />
 
-        <button onClick={joinExistingLobby}>Join lobby</button>
+        <Button isLoading={isLoadingJoin}  onClick={joinExistingLobby}>Join lobby</Button>
       </div>
-    </div>
+    </>
   );
 };
 

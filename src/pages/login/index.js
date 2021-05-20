@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect } from 'react-router';
 import { postLogIn } from '../../api/auth';
 import { ROUTE_AUTH_REGISTER, ROUTE_DASHBOARD } from '../../utils/routes';
@@ -6,6 +6,8 @@ import { isLoggedIn, loginUser } from '../../services/auth';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { toast } from 'tailwind-toast';
+import ScreenLoading from '../../components/Loading/ScreenLoading';
+import DashLayoutContext from '../../components/_shared/layout/DashLayoutContext';
 
 const LoginPage = props => {
   const [isError, setIsError] = React.useState(null);
@@ -39,6 +41,7 @@ const LoginPage = props => {
       loginUser({
         id: logInResponse.user.id,
         email: logInResponse.user.email,
+        name: logInResponse.user.name,
         accessToken: logInResponse.tokens.access.token,
         refreshToken: logInResponse.tokens.refresh.token,
       });
@@ -66,9 +69,9 @@ const LoginPage = props => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <>
       {isError && <p>An error has occurred when trying to log in</p>}
-
+      
       <div>
         <Input
           label={'E-mail'}
@@ -94,7 +97,7 @@ const LoginPage = props => {
       <Button isLoading={isLoading} onClick={handleLogIn}>Log In</Button>
 
       <a className="italic text-center text-sm" href={ROUTE_AUTH_REGISTER}>I don't have an account yet</a>
-    </div>
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ export function loginUser(user) {
   setCookie(SCRUM_USER, {
     id: user.id,
     email: user.email,
+    name: user.name
   });
 
   setCookie(SCRUM_USER_TOKEN, user.accessToken);

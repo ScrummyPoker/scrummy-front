@@ -16,15 +16,17 @@ import {
 import LobbyPage from './pages/lobby';
 import PublicRoute from './PublicRoute';
 import HomePage from './pages/home';
+import { createMemoryHistory } from 'history';
 
 require('dotenv').config();
-
 function App() {
+  const history = createMemoryHistory();
   return (
-    <Router>
+    <Router history={history}>
       <Switch>
         <PublicRoute exact path={ROUTE_HOME} component={HomePage} />
 
+        <PrivateRoute exact path={ROUTE_LOBBY} component={LobbyPage} />
         <PrivateRoute exact path={ROUTE_DASHBOARD} component={Dashboard} />
 
         <PublicRoute exact path={ROUTE_AUTH_LOGIN} component={LoginPage} />
@@ -33,7 +35,6 @@ function App() {
           path={ROUTE_AUTH_REGISTER}
           component={RegisterPage}
         />
-        <PublicRoute exact path={ROUTE_LOBBY} component={LobbyPage} />
 
         {/* <Route exact path="/:playerId/:lobbyCode" component={ChatRoom} /> */}
       </Switch>

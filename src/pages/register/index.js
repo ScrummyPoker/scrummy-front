@@ -12,6 +12,7 @@ const RegisterPage = props => {
     password: '',
   });
 
+
   const handleRegister = async () => {
     if (isFormValid()) {
       const registerResponse = await postRegister({
@@ -26,6 +27,7 @@ const RegisterPage = props => {
       loginUser({
         id: registerResponse.user.id,
         email: registerResponse.user.email,
+        name: registerResponse.user.name,
         accessToken: registerResponse.tokens.access.token,
         refreshToken: registerResponse.tokens.refresh.token,
       });
@@ -63,43 +65,41 @@ const RegisterPage = props => {
   return (
     <>
       {isError && <p>An error has occurred when trying to register</p>}
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <Input
-            label={"Your name:"}
-            name="name"
-            type={'text'}
-            placeholder={'ex: gabriel toledo'}
-            onChange={handelFormChange}
-          />
-        </div>
-
-        <div>
-          <Input
-            label={"Your e-mail:"}
-            name="email"
-            type={'email'}
-            placeholder={'ex: fallen@email.com'}
-            onChange={handelFormChange}
-          />
-        </div>
-        <div>
-          <Input
-            label={"Choose a password:"}
-            name="password"
-            type={'password'}
-            placeholder={'*******'}
-            onChange={handelFormChange}
-          />
-        </div>
-
-        <Button onClick={handleRegister}>Create account</Button>
-
-        <a className="italic text-center text-sm" href={ROUTE_AUTH_LOGIN}>
-          I already have an account
-        </a>
-
+      <div>
+        <Input
+          label={"Your name:"}
+          name="name"
+          type={'text'}
+          placeholder={'ex: gabriel toledo'}
+          onChange={handelFormChange}
+        />
       </div>
+
+      <div>
+        <Input
+          label={"Your e-mail:"}
+          name="email"
+          type={'email'}
+          placeholder={'ex: fallen@email.com'}
+          onChange={handelFormChange}
+        />
+      </div>
+      <div>
+        <Input
+          label={"Choose a password:"}
+          name="password"
+          type={'password'}
+          placeholder={'*******'}
+          onChange={handelFormChange}
+        />
+      </div>
+
+      <Button onClick={handleRegister}>Create account</Button>
+
+      <a className="italic text-center text-sm" href={ROUTE_AUTH_LOGIN}>
+        I already have an account
+      </a>
+
     </>
   );
 };
