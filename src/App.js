@@ -16,13 +16,11 @@ import {
 import LobbyPage from './pages/lobby';
 import PublicRoute from './PublicRoute';
 import HomePage from './pages/home';
-import { createMemoryHistory } from 'history';
 
 require('dotenv').config();
 function App() {
-  const history = createMemoryHistory();
   return (
-    <Router history={history}>
+    <Router>
       <Switch>
         <PublicRoute exact path={ROUTE_HOME} component={HomePage} />
 
