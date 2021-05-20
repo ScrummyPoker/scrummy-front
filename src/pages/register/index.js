@@ -95,7 +95,7 @@ const RegisterPage = props => {
 
         <Button onClick={handleRegister}>Create account</Button>
 
-        <a className="italic text-center" href={ROUTE_AUTH_LOGIN}>
+        <a className="italic text-center text-sm" href={ROUTE_AUTH_LOGIN}>
           I already have an account
         </a>
 

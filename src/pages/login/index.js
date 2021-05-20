@@ -93,7 +93,7 @@ const LoginPage = props => {
 
       <Button isLoading={isLoading} onClick={handleLogIn}>Log In</Button>
 
-      <a className="italic text-center" href={ROUTE_AUTH_REGISTER}>I don't have an account yet</a>
+      <a className="italic text-center text-sm" href={ROUTE_AUTH_REGISTER}>I don't have an account yet</a>
     </div>
   );
 };
