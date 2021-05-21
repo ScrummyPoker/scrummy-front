@@ -17,11 +17,13 @@ const LoginPage = props => {
     password: '',
   });
 
-
   React.useEffect(() => {
-    if(isError) {
+    if (isError) {
       setIsLoading(false);
-      toast().danger('Oops!', 'We could not authenticate your credentials').for(3000).show()
+      toast()
+        .danger('Oops!', 'We could not authenticate your credentials')
+        .for(3000)
+        .show();
     }
   }, [isError]);
 
@@ -35,7 +37,7 @@ const LoginPage = props => {
         password: form.password,
       });
 
-      if (!logInResponse || typeof logInResponse === undefined) 
+      if (!logInResponse || typeof logInResponse === undefined)
         return setIsError(true);
 
       loginUser({
@@ -47,7 +49,11 @@ const LoginPage = props => {
       });
 
       props.history.push(ROUTE_DASHBOARD);
+    } else {
+      setIsError(true);
     }
+
+    setIsLoading(false);
   };
 
   const handelFormChange = e => {
@@ -68,10 +74,12 @@ const LoginPage = props => {
     return isValid;
   };
 
+  const handleKeyPress = e => e.charCode === 13 && handleLogIn();
+
   return (
     <>
       {isError && <p>An error has occurred when trying to log in</p>}
-      
+
       <div>
         <Input
           label={'E-mail'}
@@ -90,13 +98,18 @@ const LoginPage = props => {
           type={'password'}
           placeholder={'*******'}
           autoComplete={'off'}
+          onKeyPress={handleKeyPress}
           onChange={handelFormChange}
         />
       </div>
 
-      <Button isLoading={isLoading} onClick={handleLogIn}>Log In</Button>
+      <Button isLoading={isLoading} onClick={handleLogIn}>
+        Log In
+      </Button>
 
-      <a className="italic text-center text-sm" href={ROUTE_AUTH_REGISTER}>I don't have an account yet</a>
+      <a className="italic text-center text-sm" href={ROUTE_AUTH_REGISTER}>
+        I don't have an account yet
+      </a>
     </>
   );
 };

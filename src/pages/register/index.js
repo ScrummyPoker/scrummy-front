@@ -6,14 +6,27 @@ import { ROUTE_AUTH_LOGIN } from '../../utils/routes';
 
 const RegisterPage = props => {
   const [isError, setIsError] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(null);
   const [form, setForm] = React.useState({
     name: '',
     email: '',
     password: '',
   });
 
+  React.useEffect(() => {
+    if (isError) {
+      setIsLoading(false);
+      toast()
+        .danger('Oops!', 'We could not create your credentials')
+        .for(3000)
+        .show();
+    }
+  }, [isError]);
 
   const handleRegister = async () => {
+    setIsLoading(true);
+    setIsError(false);
+
     if (isFormValid()) {
       const registerResponse = await postRegister({
         name: form.name,
@@ -33,7 +46,11 @@ const RegisterPage = props => {
       });
 
       props.history.push(ROUTE_DASHBOARD);
+    } else {
+      setIsError(true);
     }
+
+    setIsLoading(false);
   };
 
   const handelFormChange = e => {
@@ -62,12 +79,14 @@ const RegisterPage = props => {
     return isValid;
   };
 
+  const handleKeyPress = e => e.charCode === 13 && handleLogIn();
+
   return (
     <>
       {isError && <p>An error has occurred when trying to register</p>}
       <div>
         <Input
-          label={"Your name:"}
+          label={'Your name:'}
           name="name"
           type={'text'}
           placeholder={'ex: gabriel toledo'}
@@ -77,7 +96,7 @@ const RegisterPage = props => {
 
       <div>
         <Input
-          label={"Your e-mail:"}
+          label={'Your e-mail:'}
           name="email"
           type={'email'}
           placeholder={'ex: fallen@email.com'}
@@ -86,20 +105,22 @@ const RegisterPage = props => {
       </div>
       <div>
         <Input
-          label={"Choose a password:"}
+          label={'Choose a password:'}
           name="password"
           type={'password'}
           placeholder={'*******'}
+          onKeyPress={handleKeyPress}
           onChange={handelFormChange}
         />
       </div>
 
-      <Button onClick={handleRegister}>Create account</Button>
+      <Button isLoading={isLoading} onClick={handleRegister}>
+        Create account
+      </Button>
 
       <a className="italic text-center text-sm" href={ROUTE_AUTH_LOGIN}>
         I already have an account
       </a>
-
     </>
   );
 };

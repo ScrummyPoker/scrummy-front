@@ -4,6 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import clsx from 'clsx';
 import IconButton from '../../IconButton';
 import { UserIcon } from '@heroicons/react/solid';
+import { ROUTE_AUTH_LOGIN, ROUTE_AUTH_REGISTER } from '../../../utils/routes';
 
 const Navbar = props => {
 
@@ -21,7 +22,7 @@ const Navbar = props => {
             </a>
           </div>
         </div>
-        <div className="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
+        <div className="md:ml-10 md:pr-4 md:space-x-8">
           {isLoggedIn() ? (
             <Menu as="div" className="ml-3 relative">
               {({ open }) => (
@@ -70,9 +71,14 @@ const Navbar = props => {
               )}
             </Menu>
           ) : (
-            <a href="#" className="font-medium">
-              Log in
-            </a>
+            <>
+              <a href={ROUTE_AUTH_LOGIN} className="font-medium">
+                Log in
+              </a>
+              <a href={ROUTE_AUTH_REGISTER} className="font-medium">
+                Create Account
+              </a>
+            </>
           )}
         </div>
       </nav>
