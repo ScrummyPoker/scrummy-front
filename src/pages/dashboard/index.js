@@ -6,6 +6,9 @@ import { buildURL, ROUTE_LOBBY } from '../../utils/routes';
 import Input from '../../components/Input';
 import useInput from '../../components/Input/useInput';
 import Button from '../../components/Button';
+import InputWithButton from '../../components/Input/withButton';
+import { ChevronRightIcon } from '@heroicons/react/outline';
+import { toast } from 'tailwind-toast';
 
 const Dashboard = props => {
   const [isLoadingCreate, setIsLoadingCreate] = React.useState(false);
@@ -15,8 +18,22 @@ const Dashboard = props => {
   const newLobbyCode = useInput('');
   const existingLobbyName = useInput('');
 
+  //hooks
+  React.useEffect(() => {
+    if (isError) {
+      toast()
+        .danger(
+          'Oops!',
+          "We couldn't make the connection to the lobby. Please check the code and try again.",
+        )
+        .for(3000)
+        .show();
+    }
+  }, [isError]);
+
+  //handlers
   const handleCreateNewLobby = async () => {
-    if(!newLobbyCode.value) {
+    if (!newLobbyCode.value) {
       return setIsError(true);
     }
 
@@ -33,14 +50,16 @@ const Dashboard = props => {
           lobbyCode: newLobby.code,
         }),
       );
+    } else {
+      handleErrors();
     }
   };
 
   const joinExistingLobby = async () => {
-    if(!existingLobbyName.value) {
+    if (!existingLobbyName.value) {
       return setIsError(true);
     }
-    
+
     setIsLoadingJoin(true);
 
     const existingLobby = await enterLobbyByCode({
@@ -52,37 +71,48 @@ const Dashboard = props => {
       props.history.push(
         generatePath(ROUTE_LOBBY, {
           lobbyCode: existingLobby.code,
-        }), { update: true }
+        }),
+        { update: true },
       );
+    } else {
+      handleErrors();
     }
   };
 
+  const handleErrors = () => {
+    setIsError(true);
+    setIsLoadingJoin(false);
+  };
+
+  const handleKeyPress = (e, _cb) => _cb && e.charCode === 13 && _cb();
+
   return (
     <>
-      {isError && <p>An error has occurred when trying to enter lobby</p>}
-      
       <div>
-        <Input
+        <InputWithButton
           label="Create new lobby"
           type="text"
           placeholder="Ex: planning-spacex"
-          styles="text-input-field"
+          isLoading={isLoadingCreate}
+          buttonDisabled={newLobbyCode.value.length === 0}
+          buttonIcon={ChevronRightIcon}
+          handleButtonClick={handleCreateNewLobby}
+          onKeyPress={e => handleKeyPress(e, handleCreateNewLobby)}
           {...newLobbyCode}
         />
-
-        <Button isLoading={isLoadingCreate} onClick={handleCreateNewLobby}>
-          Create lobby
-        </Button>
       </div>
       <div className={'mt-2'}>
-        <Input
+        <InputWithButton
           label="Join existing lobby"
           type="text"
           placeholder="Enter existing lobby code"
+          isLoading={isLoadingJoin}
+          buttonDisabled={existingLobbyName.value.length === 0}
+          buttonIcon={ChevronRightIcon}
+          handleButtonClick={joinExistingLobby}
+          onKeyPress={e => handleKeyPress(e, joinExistingLobby)}
           {...existingLobbyName}
         />
-
-        <Button isLoading={isLoadingJoin}  onClick={joinExistingLobby}>Join lobby</Button>
       </div>
     </>
   );
