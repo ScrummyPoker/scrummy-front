@@ -1,13 +1,16 @@
 import React, { Fragment } from 'react';
 import { isLoggedIn, logoutUser } from '../../../services/auth';
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Disclosure, Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import IconButton from '../../IconButton';
 import { UserIcon } from '@heroicons/react/solid';
-import { ROUTE_AUTH_LOGIN, ROUTE_AUTH_REGISTER } from '../../../utils/routes';
+import {
+  ROUTE_AUTH_LOGIN,
+  ROUTE_AUTH_REGISTER,
+  ROUTE_DASHBOARD,
+} from '../../../utils/routes';
 
 const Navbar = props => {
-
   return (
     <div className="relative p-4 px-4 sm:px-6 lg:px-8 bg-gray-800">
       <nav className="relative flex items-center justify-between lg:justify-start">
@@ -28,12 +31,13 @@ const Navbar = props => {
               {({ open }) => (
                 <>
                   <div>
-                    <Menu.Button 
-                      as={"div"} 
+                    <Menu.Button
+                      as={'div'}
                       className={clsx(
-                        "max-w-xs bg-gray-800 rounded-full flex items-center text-sm", 
-                        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      )}>
+                        'max-w-xs bg-gray-800 rounded-full flex items-center text-sm',
+                        'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white',
+                      )}
+                    >
                       <IconButton Icon={UserIcon} />
                     </Menu.Button>
                   </div>
@@ -53,16 +57,25 @@ const Navbar = props => {
                     >
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            onClick={logoutUser}
-                            href="#"
-                            className={clsx(
-                              active && 'bg-gray-100',
-                              'block px-4 py-2 text-sm text-gray-700',
-                            )}
-                          >
-                            Sign out
-                          </a>
+                          <>
+                            <a
+                              href={ROUTE_DASHBOARD}
+                              className={
+                                'block px-4 py-2 text-sm text-gray-700'
+                              }
+                            >
+                              Dashboard
+                            </a>
+                            <a
+                              onClick={logoutUser}
+                              href="#"
+                              className={
+                                'block px-4 py-2 text-sm text-gray-700'
+                              }
+                            >
+                              Sign out
+                            </a>
+                          </>
                         )}
                       </Menu.Item>
                     </Menu.Items>
