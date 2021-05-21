@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 const Input = ({ children, id, ...props }) => (
-  <div className={props.styleClass}>
+  <div className={props.styles}>
     {props.label && (
       <label
         className="block text-sm font-bold mb-2"

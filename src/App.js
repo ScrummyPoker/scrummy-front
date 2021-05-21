@@ -33,7 +33,6 @@ function App() {
           path={ROUTE_AUTH_REGISTER}
           component={RegisterPage}
         />
-
         {/* <Route exact path="/:playerId/:lobbyCode" component={ChatRoom} /> */}
       </Switch>
     </Router>

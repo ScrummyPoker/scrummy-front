@@ -3,9 +3,14 @@ import IconButton from '../../components/IconButton';
 import Button from '../../components/Button';
 import DeckCard from '../../components/DeckCard';
 import Input from '../../components/Input';
-import { BellIcon } from '@heroicons/react/outline';
+import { BellIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import InputWithButton from '../../components/Input/withButton';
+import useInput from '../../components/Input/useInput';
+
 
 const HomePage = props => {
+  const test = useInput("");
+
   return (
     <div className="home-container">
       <div>
@@ -15,6 +20,18 @@ const HomePage = props => {
           type={'password'}
           placeholder={'*******'}
           autoComplete={'off'}
+        />
+
+        <InputWithButton
+          {...test}
+          label={'Test'}
+          name="text"
+          type={'text'}
+          placeholder={'test'}
+          autoComplete={'off'}
+          buttonDisabled={test.value.length === 0}
+          buttonIcon={ChevronRightIcon}
+          handleButtonClick={() => console.log("Clicked!")}
         />
       </div>
       

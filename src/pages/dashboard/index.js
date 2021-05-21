@@ -66,7 +66,7 @@ const Dashboard = props => {
           label="Create new lobby"
           type="text"
           placeholder="Ex: planning-spacex"
-          styleClass="text-input-field"
+          styles="text-input-field"
           {...newLobbyCode}
         />
 

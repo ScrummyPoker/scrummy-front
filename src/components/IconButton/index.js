@@ -15,7 +15,14 @@ const IconButton = ({ children, Icon, ...props }) => (
     {...props}
   >
     {props.label && <span className="sr-only">{props.label}</span>}
-    <Icon className="h-5 w-5" aria-hidden="true" />
+    <Icon 
+      className={clsx(
+        "h-5 w-5 stroke-current",
+        props.iconStyle === "primary" && "text-primary",
+        props.iconStyle === "secondary" && "text-secondary",
+        props.iconStyle === "dark" && "text-gray-800",
+      )}
+      aria-hidden="true" />
   </button>
 );
 
