@@ -1,7 +1,7 @@
-
 import React from 'react';
 import clsx from 'clsx';
 import { BG_GRADIENT } from '../../constants/tw.custom.helper';
+import { ReactComponent as SpinnerSVG } from '../../assets/img/spinner.svg';
 
 const IconButton = ({ children, Icon, ...props }) => (
   <button
@@ -15,14 +15,21 @@ const IconButton = ({ children, Icon, ...props }) => (
     {...props}
   >
     {props.label && <span className="sr-only">{props.label}</span>}
-    <Icon 
-      className={clsx(
-        "h-5 w-5 stroke-current",
-        props.iconStyle === "primary" && "text-primary",
-        props.iconStyle === "secondary" && "text-secondary",
-        props.iconStyle === "dark" && "text-gray-800",
-      )}
-      aria-hidden="true" />
+
+    {props.isLoading ? (
+      <SpinnerSVG />
+    ) : (
+      <Icon
+        className={clsx(
+          'h-5 w-5 stroke-current',
+          props.iconStyle === 'primary' && 'text-primary',
+          props.iconStyle === 'secondary' && 'text-secondary',
+          props.iconStyle === 'dark' && 'text-gray-800',
+          props.iconStyle === 'success' && 'text-green-400',
+        )}
+        aria-hidden="true"
+      />
+    )}
   </button>
 );
 

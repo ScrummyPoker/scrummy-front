@@ -3,21 +3,22 @@ import clsx from 'clsx';
 import Input from '.';
 import IconButton from '../IconButton';
 
-const InputWithButton = ({ buttonDisabled, buttonIcon, handleButtonClick, ...props }) => (
+const InputWithButton = ({ isLoading, buttonDisabled, buttonIcon, handleButtonClick, ...props }) => (
   <div className="relative">
     <span
       className={clsx(
-        buttonDisabled && 'opacity-10',
+        buttonDisabled && 'opacity-30',
         'absolute right-0.5	bottom-0.5',
       )}
     >
       <IconButton
-        iconStyle="primary"
+        isLoading={isLoading}
+        iconStyle="success"
         Icon={buttonIcon}
         onClick={!buttonDisabled && handleButtonClick}
       />
     </span>
-    <Input {...props} />
+    <Input disabled={isLoading} {...props} />
   </div>
 );
 
