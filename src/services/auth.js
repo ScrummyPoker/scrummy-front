@@ -5,6 +5,7 @@ import {
   SCRUM_USER_TOKEN,
   SCRUM_USER_REFRESH_TOKEN,
 } from '../utils/cookies';
+import { RECEIVED_GREETINGS } from '../constants/auth';
 
 export function loginUser(user) {
   setCookie(SCRUM_USER, {
@@ -22,6 +23,7 @@ export function logoutUser(user) {
   eraseCookie(SCRUM_USER);
   eraseCookie(SCRUM_USER_TOKEN);
   eraseCookie(SCRUM_USER_REFRESH_TOKEN);
+  localStorage.removeItem(RECEIVED_GREETINGS)
   window.location.href = ROUTE_AUTH_LOGIN;
 }
 

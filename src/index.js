@@ -6,9 +6,7 @@ import 'tailwindcss/tailwind.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <SocketProvider>
-      <App />
-    </SocketProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root'),
 );

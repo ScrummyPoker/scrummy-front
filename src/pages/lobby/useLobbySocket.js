@@ -11,7 +11,6 @@ const CARD_MESSAGE_EVENT = 'cardMessage';
 const LOBBY_MESSAGE_EVENT = 'lobbyMessage';
 const LOBBY_NEW_PLAYER = 'newPlayer';
 
-const SOCKET_SERVER_URL = 'http://localhost:4444';
 
 const useLobbySocket = ({ playerId, lobbyCode }) => {
   const [messages, setMessages] = useState([]);
@@ -23,7 +22,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
 
   useEffect(() => {
     // Creates a WebSocket connection
-    socketRef.current = io(SOCKET_SERVER_URL, {
+    socketRef.current = io(process.env.SOCKET_URL, {
       query: { lobbyCode },
       transports: ['websocket'],
     });

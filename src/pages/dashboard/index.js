@@ -9,6 +9,7 @@ import Button from '../../components/Button';
 import InputWithButton from '../../components/Input/withButton';
 import { ChevronRightIcon } from '@heroicons/react/outline';
 import { toast } from 'tailwind-toast';
+import { RECEIVED_GREETINGS } from '../../constants/auth';
 
 const Dashboard = props => {
   const [isLoadingCreate, setIsLoadingCreate] = React.useState(false);
@@ -18,7 +19,25 @@ const Dashboard = props => {
   const newLobbyCode = useInput('');
   const existingLobbyName = useInput('');
 
-  //hooks
+  //#region hooks
+
+  //didMount
+  React.useEffect(() => {
+    //hello greetings
+    const isRecentlyLogged = !localStorage.getItem(RECEIVED_GREETINGS);
+
+    if (isRecentlyLogged) {
+      localStorage.setItem(RECEIVED_GREETINGS, 'true');
+      toast()
+        .success(
+          'Welcome to Scrummy!',
+          'You can join an existing lobby or create a new one. Have fun!',
+        )
+        .for(6000)
+        .show();
+    }
+  }, []);
+
   React.useEffect(() => {
     if (isError) {
       toast()
@@ -31,7 +50,9 @@ const Dashboard = props => {
     }
   }, [isError]);
 
-  //handlers
+  //#endregion
+
+  //#region handlers
   const handleCreateNewLobby = async () => {
     if (!newLobbyCode.value) {
       return setIsError(true);
@@ -85,6 +106,7 @@ const Dashboard = props => {
   };
 
   const handleKeyPress = (e, _cb) => _cb && e.charCode === 13 && _cb();
+  //#endregion
 
   return (
     <>

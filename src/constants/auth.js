@@ -1,0 +1,1 @@
+export const RECEIVED_GREETINGS = "received_greetings";
