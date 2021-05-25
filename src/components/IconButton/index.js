@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { BG_GRADIENT } from '../../constants/tw.custom.helper';
 import { ReactComponent as SpinnerSVG } from '../../assets/img/spinner.svg';
 
-const IconButton = ({ children, Icon, ...props }) => (
+const IconButton = ({ children, Icon, iconStyle, ...props }) => (
   <button
     className={clsx(
       props.primary && BG_GRADIENT,
@@ -22,10 +22,10 @@ const IconButton = ({ children, Icon, ...props }) => (
       <Icon
         className={clsx(
           'h-5 w-5 stroke-current',
-          props.iconStyle === 'primary' && 'text-primary',
-          props.iconStyle === 'secondary' && 'text-secondary',
-          props.iconStyle === 'dark' && 'text-gray-800',
-          props.iconStyle === 'success' && 'text-green-400',
+          iconStyle === 'primary' && 'text-primary',
+          iconStyle === 'secondary' && 'text-secondary',
+          iconStyle === 'dark' && 'text-gray-800',
+          iconStyle === 'success' && 'text-green-400',
         )}
         aria-hidden="true"
       />

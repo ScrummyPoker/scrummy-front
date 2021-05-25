@@ -22,9 +22,10 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
 
   useEffect(() => {
     // Creates a WebSocket connection
-    socketRef.current = io(process.env.SOCKET_URL, {
+    socketRef.current = io(process.env.REACT_APP_SOCKET_URL, {
       query: { lobbyCode },
       transports: ['websocket'],
+      resource: 'nodejs'
     });
 
     // join room

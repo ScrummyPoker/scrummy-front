@@ -17,7 +17,6 @@ import LobbyPage from './pages/lobby';
 import PublicRoute from './PublicRoute';
 import HomePage from './pages/home';
 
-require('dotenv').config();
 function App() {
   return (
     <Router>
