@@ -2,6 +2,9 @@
   "name": "scrumpokergame-front",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@headlessui/react": "^1.2.0",
