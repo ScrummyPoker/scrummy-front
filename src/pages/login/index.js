@@ -103,7 +103,10 @@ const LoginPage = props => {
         />
       </div>
 
-      <Button isLoading={isLoading} onClick={handleLogIn}>
+      <Button 
+        primary
+        isLoading={isLoading} 
+        onClick={handleLogIn}>
         Log In
       </Button>
 

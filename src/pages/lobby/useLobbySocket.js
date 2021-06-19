@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { getUserLogged } from '../../services/auth';
 
-const NEW_CHAT_MESSAGE_EVENT = 'joinLobby';
+const JOIN_LOBBY = 'joinLobby';
 const NEW_MESSAGE_EVENT = 'chatMessage';
 const GO_NEXT_PAGE_EVENT = 'goToNextPage';
 const LOBBY_INFO = 'lobbyInfo';
@@ -9,10 +10,10 @@ const ADMIN_ACTION = 'adminAction';
 
 const CARD_MESSAGE_EVENT = 'cardMessage';
 const LOBBY_MESSAGE_EVENT = 'lobbyMessage';
-const LOBBY_NEW_PLAYER = 'newPlayer';
+const LOBBY_PLAYER_UPDATE = 'playerUpdate';
 
 
-const useLobbySocket = ({ playerId, lobbyCode }) => {
+const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
   const [messages, setMessages] = useState([]);
   const [cardMessages, setCardMessages] = useState([]);
   const [players, setPlayers] = useState([]);
@@ -29,8 +30,9 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
     });
 
     // join room
-    socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
+    socketRef.current.emit(JOIN_LOBBY, {
       playerId,
+      playerName,
       room: lobbyCode,
     });
 
@@ -45,7 +47,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
     });
 
     // Listens for incoming NEW PLAYER
-    socketRef.current.on(LOBBY_NEW_PLAYER, playersMessageData => {
+    socketRef.current.on(LOBBY_PLAYER_UPDATE, playersMessageData => {
       setPlayers(playersMessageData.players);
     });
 
@@ -80,6 +82,7 @@ const useLobbySocket = ({ playerId, lobbyCode }) => {
       lobbyCode,
       player: {
         id: playerId,
+        playerName,
       },
     };
 

@@ -1,11 +1,22 @@
 import React from 'react';
 import { getFibonacci } from '../../constants/Fibonacci';
-
+import { UserIcon, CheckIcon, SwitchHorizontalIcon, UsersIcon } from '@heroicons/react/solid';
 import useLobbySocket from './useLobbySocket';
+import { getUserLogged } from '../../services/auth';
+import Card from '../../components/Card';
+import clsx from 'clsx';
+import AdminPanel from './AdminPanel';
+import DeckCard from '../../components/DeckCard';
+import Button from '../../components/Button';
+import IconButton from '../../components/IconButton';
+import PlayersPanel from './PlayersPanel';
+import ResultList from '../../components/ResultList';
 
-const LobbyInfo = ({ playerId, lobbyCode, lobbyData }) => {
+
+const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
   const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
   const [cardChosen, setCardChosen] = React.useState(null);
+  const [cardConfirmed, setCardConfirmed] = React.useState(false);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
 
@@ -21,20 +32,11 @@ const LobbyInfo = ({ playerId, lobbyCode, lobbyData }) => {
     showResults,
     clearResults,
     hideResults,
-  } = useLobbySocket({ playerId, lobbyCode });
-
-  const handleNewMessageChange = event => {
-    setNewMessage(event.target.value);
-  };
-
-  const handleSendMessage = () => {
-    sendMessage(newMessage);
-    setNewMessage('');
-  };
-
-  React.useEffect(() => {
-    sendCardMessage(cardChosen);
-  }, [cardChosen]);
+  } = useLobbySocket({
+    playerId: userLogged.id,
+    playerName: userLogged.name,
+    lobbyCode
+  });
 
   React.useEffect(() => {
     if (adminAction) {
@@ -43,7 +45,7 @@ const LobbyInfo = ({ playerId, lobbyCode, lobbyData }) => {
       }
 
       if (adminAction.action === 'CLEAR_RESULTS') {
-        setCardChosen(null);
+        handleChangeCard();
       }
 
       if (adminAction.action === 'SHOWING_RESULTS' && !showingResults) {
@@ -82,78 +84,137 @@ const LobbyInfo = ({ playerId, lobbyCode, lobbyData }) => {
     setGameStarted(true);
   };
 
-  React.useEffect(() => {}, []);
+  const toggleCardConfirmation = () => {
+    setCardConfirmed(!cardConfirmed);
+    sendCardMessage(cardChosen);
+  }
 
-  const isPlayerAdminInLobby = () => {
+  const handleChangeCard = () => {
+    setCardChosen(null);
+    setCardConfirmed(false);
+  }
+
+  React.useEffect(() => { }, []);
+
+  const isPlayerAdminInLobby = (playerId) => {
     return lobbyData.admins.indexOf(playerId) > -1;
   };
 
   return (
-    <div className="chat-room-container">
-      <h1 className="room-name">
-        lobbyCode:
-        {lobbyCode}
-        playerId:
-        {playerId}
-      </h1>
-      <div>{!!lobbyInfo && JSON.stringify(lobbyInfo)}</div>
-      <div className="messages-container">
-        <ol className="messages-list">
-          {showingResults && (
-            <>
-              {cardMessages.map((cardMessage, i) => (
-                <li key={i}>
-                  Player ({cardMessage.player.id}):{' '}
-                  <b>{cardMessage.cardChosen}</b>
-                </li>
-              ))}
-            </>
-          )}
-        </ol>
-      </div>
+    <div className="relative chat-room-container">
+      {lobbyData && (
+        <Card>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label>Lobby Code:</label> <b>{lobbyCode}</b>
+            </div>
+            <div>
+              <label>Created at:</label> <b>{lobbyData.createAt}</b>
+            </div>
+            <div>
+              <label>Nº. of Admins:</label> <b>{lobbyData.admins.length}</b>
+            </div>
+            <div>
+              <label>Players connected:</label> <b>{players.length}</b>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {gameStarted && (
         <>
-          {[...new Set(getFibonacci(8))].map(index => (
-            <button type="button" href="#" onClick={() => setCardChosen(index)}>
-              {index}
-            </button>
-          ))}
+          {
+            cardConfirmed ? (
+              <div>
+                <ResultList 
+                  players={players}
+                  showingResults={showingResults}
+                  cardMessages={cardMessages} />
 
-          {cardChosen && (
-            <button
-              type="button"
-              onClick={() => setCardChosen(null)}
-              className=""
-            >
-              clear card
-            </button>
-          )}
+                {showingResults !== true && (
+                  <Button
+                    primary
+                    icon={SwitchHorizontalIcon}
+                    onClick={handleChangeCard}>Change Card</Button>
+                )}
+                
+              </div>
+            ) : (
+              <div className="decks-container my-10 pb-24" >
+                {cardChosen !== null ? (
+                  //TODO HOC
+                  <div>
+                    <div className="grid grid-cols-6 md:grid-cols-5 lg:grid-cols-6">
+                      <div
+                        className={clsx(
+                          "col-start-3 col-span-2",
+                          "md:col-start-2 md:col-span-3",
+                          "lg:col-start-3 lg:col-span-2"
+
+                        )}>
+                        <DeckCard
+                          value={cardChosen}
+                          type="button"
+                          href="#"
+                          onClick={() => { }} />
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 w-full">
+                      <Button
+                        small
+                        alternative
+                        icon={CheckIcon}
+                        onClick={toggleCardConfirmation}>Confirm Card</Button>
+
+                      <Button
+                        primary
+                        icon={SwitchHorizontalIcon}
+                        onClick={handleChangeCard}>Change Card</Button>
+                    </div>
+                  </div>
+                ) : (
+                  //TODO HOC
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                    {[...new Set(getFibonacci(8))].map(index => (
+                      <DeckCard
+                        key={index}
+                        value={index}
+                        type="button"
+                        href="#"
+                        onClick={() => setCardChosen(index)} />
+                    ))}
+                  </div>
+                )}
+
+
+              </div>
+            )
+          }
         </>
+
       )}
 
-      <div>PLayers on lobby:</div>
-      {players.map((player, i) => (
-        <li key={i}>Player {JSON.stringify(player)}</li>
-      ))}
 
-      {isPlayerAdminInLobby() && (
-        <>
-          <button onClick={handleAdminStartGame}>
-            {gameStarted ? 'stop game' : 'start game'}
-          </button>
+      <div>
+        <PlayersPanel
+          players={players}
+          isPlayerAdminInLobby={isPlayerAdminInLobby} />
+      </div>
 
-          {showingResults ? (
-            <>
-              <button onClick={handleHideResults}>hide results</button>
-              <button onClick={handleClearResults}>clear results</button>
-            </>
-          ) : (
-            <button onClick={handleShowResults}>show results</button>
-          )}
-        </>
-      )}
-    </div>
+      {
+        isPlayerAdminInLobby(userLogged.id) && (
+          <>
+            <AdminPanel
+              showingResults={showingResults}
+              gameStarted={gameStarted}
+              handleAdminStartGame={handleAdminStartGame}
+              handleHideResults={handleHideResults}
+              handleClearResults={handleClearResults}
+              handleShowResults={handleShowResults} />
+          </>
+        )
+      }
+    </div >
   );
 };
 

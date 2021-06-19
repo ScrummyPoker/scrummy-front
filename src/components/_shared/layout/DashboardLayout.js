@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }) => {
       isLoading,
       setIsLoading
     }}>
-    <div className={'w-full h-screen bg-dark text-white'}>
+    <div className={'w-full h-auto min-h-screen bg-dark text-white'}>
       <Navbar />
       <div className="mx-auto w-full sm:w-1/2 md:w-1/3 p-5 ">
         <div className="grid grid-cols-1 gap-4">{children}</div>

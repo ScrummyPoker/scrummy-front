@@ -115,7 +115,10 @@ const RegisterPage = props => {
         />
       </div>
 
-      <Button isLoading={isLoading} onClick={handleRegister}>
+      <Button 
+        primary
+        isLoading={isLoading} 
+        onClick={handleRegister}>
         Create account
       </Button>
 

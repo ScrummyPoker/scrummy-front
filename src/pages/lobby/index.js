@@ -10,28 +10,34 @@ import { readCookie, SCRUM_USER_REFRESH_TOKEN } from '../../utils/cookies';
 import { ROUTE_DASHBOARD } from '../../utils/routes';
 import LobbyInfo from './LobbyInfo';
 import useContainer from './useContainer';
+import FlatButton from '../../components/FlatButton';
+import { ChevronLeftIcon } from '@heroicons/react/solid';
+
 
 const LobbyPage = props => {
   const { lobbyCode } = props.match.params;
-  const playerId = getUserLogged().id;
+  const userLogged = getUserLogged();
 
-  const { lobbyData, setLobbyData, handleDeleteLobby, goBack } = useContainer(
-    props,
-  );
+  const {
+    lobbyData,
+    handleDeleteLobby,
+    goBack
+  } = useContainer(props);
 
   return (
     <>
       {lobbyData ? (
         <>
-          <button onClick={goBack}>Back</button>
-
-          <button onClick={handleDeleteLobby}>Delete lobby</button>
-          <button>Leave lobby</button>
+          <div className="w-1/2">
+            <FlatButton onClick={goBack} icon={ChevronLeftIcon}>
+              <div>Back</div>
+            </FlatButton>
+          </div>
 
           <LobbyInfo
             lobbyData={lobbyData}
             lobbyCode={lobbyCode}
-            playerId={playerId}
+            userLogged={userLogged}
           />
         </>
       ) : (

@@ -36,7 +36,7 @@ const HomePage = props => {
       </div>
       
       <DeckCard/>
-      <Button>Log In</Button>
+      <Button primary>Log In</Button>
 
       <IconButton
         light 
