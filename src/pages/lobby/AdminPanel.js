@@ -9,6 +9,7 @@ const AdminPanel = ({
   handleAdminStartGame,
   handleHideResults,
   handleClearResults,
+  handleResetGame,
   handleShowResults,
 }) => {
   const [isShowingButtons, setIsShowingButtons] = React.useState(false);
@@ -25,7 +26,7 @@ const AdminPanel = ({
         <div className={"bg-black bg-opacity-90 p-3 rounded-lg fixed right-10 bottom-24"}>
 
           {gameStarted ? (
-            <Button icon={TrashIcon} transparent onClick={handleClearResults}>
+            <Button icon={TrashIcon} transparent onClick={handleResetGame}>
               Reset Game
             </Button>
           ) : (

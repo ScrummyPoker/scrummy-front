@@ -27,6 +27,7 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
     sendCardMessage,
     getPlayersInLobby,
     startGame,
+    stopGame,
     players,
     adminAction,
     showResults,
@@ -56,10 +57,8 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
         setShowingResults(false);
       }
 
-      if (adminAction.action === 'STOP' && showingResults) {
-        setGameStarted(false);
-        setCardChosen(null);
-        setShowingResults(false);
+      if (adminAction.action === 'STOPPED') {
+        handleGameStopped();
       }
     }
   }, [adminAction]);
@@ -73,6 +72,16 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
     clearResults();
     handleHideResults();
   };
+
+  const handleResetGame = () => {
+    stopGame();
+  };
+  
+  const handleGameStopped = () => {
+    setGameStarted(false);
+    setCardChosen(null);
+    setShowingResults(false);
+  }
 
   const handleHideResults = () => {
     hideResults();
@@ -210,6 +219,7 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
               handleAdminStartGame={handleAdminStartGame}
               handleHideResults={handleHideResults}
               handleClearResults={handleClearResults}
+              handleResetGame={handleResetGame}
               handleShowResults={handleShowResults} />
           </>
         )

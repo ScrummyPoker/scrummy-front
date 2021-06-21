@@ -94,6 +94,10 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
     emitAdminAction('STARTED');
   };
 
+  const stopGame = () => {
+    emitAdminAction('STOPPED');
+  };
+
   const showResults = () => {
     emitAdminAction('SHOWING_RESULTS');
   };
@@ -137,6 +141,7 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
     cardMessages,
     sendCardMessage,
     startGame,
+    stopGame,
     players,
     adminAction,
     showResults,
