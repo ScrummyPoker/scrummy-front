@@ -79,8 +79,8 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
   
   const handleGameStopped = () => {
     setGameStarted(false);
-    setCardChosen(null);
     setShowingResults(false);
+    handleChangeCard();
   }
 
   const handleHideResults = () => {
@@ -98,8 +98,8 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
     sendCardMessage(cardChosen);
   }
 
+  setCardChosen(null);
   const handleChangeCard = () => {
-    setCardChosen(null);
     setCardConfirmed(false);
   }
 
