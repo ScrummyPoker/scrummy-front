@@ -17,12 +17,12 @@ const useContainer = props => {
   //didMount
   useEffect(() => {
     async function getLobby(lobbyCode) {
-      let lobbyData = await enterLobbyByCode({
+      let lobbyDataRes = await enterLobbyByCode({
         userId: getUserLogged().id,
         lobbyCode: lobbyCode,
       });
 
-      if (lobbyData) {
+      if (lobbyDataRes) {
         setLobbyData(lobbyData);
       }
     }
