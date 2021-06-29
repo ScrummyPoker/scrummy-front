@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { getFibonacci } from '../../constants/Fibonacci';
 import { UserIcon, CheckIcon, SwitchHorizontalIcon, UsersIcon } from '@heroicons/react/solid';
 import useLobbySocket from './useLobbySocket';
@@ -11,14 +11,19 @@ import Button from '../../components/Button';
 import IconButton from '../../components/IconButton';
 import PlayersPanel from './PlayersPanel';
 import ResultList from '../../components/ResultList';
+import { useLobby, LobbyContext } from './context';
+import { useParams } from 'react-router-dom';
 
-
-const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
+const LobbyInfo = props => {
   const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
   const [cardChosen, setCardChosen] = React.useState(null);
   const [cardConfirmed, setCardConfirmed] = React.useState(false);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
+  const { lobbyCode } = useParams();
+  const userLogged = getUserLogged();
+
+  const { lobbyData } = useContext(LobbyContext);
 
   const {
     lobbyInfo,
@@ -98,15 +103,13 @@ const LobbyInfo = ({ userLogged, lobbyCode, lobbyData }) => {
     sendCardMessage(cardChosen);
   }
 
-  setCardChosen(null);
   const handleChangeCard = () => {
+    setCardChosen(null);
     setCardConfirmed(false);
   }
 
-  React.useEffect(() => { }, []);
-
   const isPlayerAdminInLobby = (playerId) => {
-    return lobbyData.admins.indexOf(playerId) > -1;
+    return lobbyData ? lobbyData.admins.indexOf(playerId) > -1 : 0;
   };
 
   return (

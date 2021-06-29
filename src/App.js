@@ -24,6 +24,7 @@ function App() {
         <PublicRoute exact path={ROUTE_HOME} component={HomePage} />
 
         <PrivateRoute exact path={ROUTE_LOBBY} component={LobbyPage} />
+
         <PrivateRoute exact path={ROUTE_DASHBOARD} component={Dashboard} />
 
         <PublicRoute exact path={ROUTE_AUTH_LOGIN} component={LoginPage} />

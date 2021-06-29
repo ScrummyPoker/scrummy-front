@@ -9,6 +9,7 @@ const IconButton = ({
   iconStyle,
   primary,
   light,
+  isLoading,
   ...props 
 }) => (
   <button
@@ -23,7 +24,7 @@ const IconButton = ({
   >
     {props.label && <span className="sr-only">{props.label}</span>}
 
-    {props.isLoading ? (
+    {isLoading ? (
       <SpinnerSVG />
     ) : (
       <Icon

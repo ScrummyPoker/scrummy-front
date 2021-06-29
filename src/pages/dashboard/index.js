@@ -16,10 +16,32 @@ const Dashboard = props => {
   const [isLoadingJoin, setIsLoadingJoin] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
-  const newLobbyCode = useInput('');
-  const existingLobbyName = useInput('');
+  const [newLobbyCode, setNewLobbyCode] = React.useState('');
+  const [existingLobbyName, setExistingLobbyName] = React.useState('');
+
 
   //#region hooks
+
+  React.useEffect(() => {
+    const availableChars = /[^a-zA-Z0-9-]/ig;
+
+    if(newLobbyCode.length && newLobbyCode.match(availableChars)) {
+      setNewLobbyCode(
+        newLobbyCode
+        .replace(' ', '-')
+        .replace(availableChars, '')
+      );
+    }
+
+    if(existingLobbyName.length && existingLobbyName.match(availableChars)) {
+      setExistingLobbyName(
+        existingLobbyName
+        .replace(' ', '-')
+        .replace(availableChars, '')
+      );
+    }
+
+  }, [newLobbyCode, existingLobbyName]);
 
   //didMount
   React.useEffect(() => {
@@ -53,16 +75,17 @@ const Dashboard = props => {
   //#endregion
 
   //#region handlers
+  const handleNewLobby = e => setNewLobbyCode(e.target.value);
+  const handleExistingLobby = e => setExistingLobbyName(e.target.value);
+
   const handleCreateNewLobby = async () => {
-    if (!newLobbyCode.value) {
-      return setIsError(true);
-    }
+    if (!newLobbyCode) return setIsError(true);
 
     setIsLoadingCreate(true);
 
     const newLobby = await createLobby({
       userId: getUserLogged().id,
-      lobbyCode: newLobbyCode.value,
+      lobbyCode: newLobbyCode,
     });
 
     if (newLobby) {
@@ -77,15 +100,13 @@ const Dashboard = props => {
   };
 
   const joinExistingLobby = async () => {
-    if (!existingLobbyName.value) {
-      return setIsError(true);
-    }
+    if (!existingLobbyName) return setIsError(true);
 
     setIsLoadingJoin(true);
 
     const existingLobby = await enterLobbyByCode({
       userId: getUserLogged().id,
-      lobbyCode: existingLobbyName.value,
+      lobbyCode: existingLobbyName,
     });
 
     if (existingLobby) {
@@ -116,11 +137,12 @@ const Dashboard = props => {
           type="text"
           placeholder="Ex: planning-spacex"
           isLoading={isLoadingCreate}
-          buttonDisabled={newLobbyCode.value.length === 0}
+          buttonDisabled={newLobbyCode.length === 0}
           buttonIcon={ChevronRightIcon}
           handleButtonClick={handleCreateNewLobby}
           onKeyPress={e => handleKeyPress(e, handleCreateNewLobby)}
-          {...newLobbyCode}
+          onChange={handleNewLobby}
+          value={newLobbyCode}
         />
       </div>
       <div className={'mt-2'}>
@@ -129,11 +151,12 @@ const Dashboard = props => {
           type="text"
           placeholder="Enter existing lobby code"
           isLoading={isLoadingJoin}
-          buttonDisabled={existingLobbyName.value.length === 0}
+          buttonDisabled={existingLobbyName.length === 0}
           buttonIcon={ChevronRightIcon}
           handleButtonClick={joinExistingLobby}
           onKeyPress={e => handleKeyPress(e, joinExistingLobby)}
-          {...existingLobbyName}
+          onChange={handleExistingLobby}
+          value={existingLobbyName}
         />
       </div>
     </>
