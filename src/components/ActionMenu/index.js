@@ -9,6 +9,8 @@ import './style.css';
 import { UserAddIcon, UsersIcon } from '@heroicons/react/outline';
 import { useHistory } from "react-router-dom";
 import PlayersPanel from '../../pages/lobby/PlayersPanel';
+import { ROUTE_DASHBOARD } from '../../utils/routes';
+import { getUserLogged } from '../../services/auth';
 
 const ActionMenu = ({
   players,
@@ -33,30 +35,37 @@ const ActionMenu = ({
   return (
     <div className="fixed w-full bottom-0 left-0 bg-gray-800 bg-opacity-90">
       <div className="mx-auto">
-        <div className="grid grid-cols-5 flex justify-center">
-          {gameStarted ? (
-            <div>
-              <FlatButton onClick={handleResetGame} icon={TrashIcon} vertical>
-                <div>RESET GAME</div>
-              </FlatButton>
-            </div>
-          ) : (
-            <div>
-              <FlatButton onClick={handleAdminStartGame} icon={PlayIcon} vertical>
-                <div>START GAME</div>
-              </FlatButton>
-            </div>
-          )}
-          <div>
-            <FlatButton onClick={handleShowResults} icon={EyeIcon} vertical>
-              <div>SHOW RESULTS</div>
-            </FlatButton>
-          </div>
-          <div>
-            <FlatButton onClick={handleClearResults} icon={BadgeCheckIcon} vertical>
-              <div>NEW ROUND</div>
-            </FlatButton>
-          </div>
+        <div className="grid grid-flow-col flex justify-center">
+
+          {isPlayerAdminInLobby(getUserLogged().id) &&
+            <>
+              {gameStarted ? (
+                <div>
+                  <FlatButton onClick={handleResetGame} icon={TrashIcon} vertical>
+                    <div>RESET GAME</div>
+                  </FlatButton>
+                </div>
+              ) : (
+                <div>
+                  <FlatButton onClick={handleAdminStartGame} icon={PlayIcon} vertical>
+                    <div>START GAME</div>
+                  </FlatButton>
+                </div>
+              )}
+
+              <div>
+                <FlatButton onClick={handleShowResults} icon={EyeIcon} vertical>
+                  <div>SHOW RESULTS</div>
+                </FlatButton>
+              </div>
+              <div>
+                <FlatButton onClick={handleClearResults} icon={BadgeCheckIcon} vertical>
+                  <div>NEW ROUND</div>
+                </FlatButton>
+              </div>
+            </>
+          }
+
           <div>
             <FlatButton onClick={toggleShowingPlayers} icon={UsersIcon} vertical>
               <div>PLAYERS</div>

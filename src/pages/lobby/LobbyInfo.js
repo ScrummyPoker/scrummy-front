@@ -80,6 +80,7 @@ const LobbyInfo = props => {
     setIsAllowedToShowResults(cardMessages.length === players.length);
   }, [cardMessages])
 
+
   const handleShowResults = () => {
     if (isAllowedToShowResults) {
       showResults();

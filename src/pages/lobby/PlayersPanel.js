@@ -11,7 +11,7 @@ const PlayersPanel = ({
   return (
     <div className="p-2 px-10">
       <h3 className="mb-5">Player connected to lobby:</h3>
-      <div className="grid grid-cols-8 gap-5">
+      <div className="grid  grid-cols-4 md:grid-cols-8 gap-5">
         {players.map((player, i) => (
           <div key={i} className="text-center">
             <div class="relative inline-block">
