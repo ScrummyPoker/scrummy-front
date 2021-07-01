@@ -70,7 +70,7 @@ const RegisterPage = props => {
     }
 
     //validate password
-    if (form.password.length < 8) {
+    if (form.password.length < 6) {
       isValid = false;
     }
 
@@ -113,6 +113,7 @@ const RegisterPage = props => {
           onKeyPress={handleKeyPress}
           onChange={handelFormChange}
         />
+        <em className="text-xs">*min 6 characteres</em>
       </div>
 
       <Button 
