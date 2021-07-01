@@ -26,6 +26,8 @@ const LobbyInfo = props => {
   const [cardConfirmed, setCardConfirmed] = React.useState(false);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
+  const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(false);
+
   const { lobbyCode } = useParams();
   const userLogged = getUserLogged();
 
@@ -74,9 +76,20 @@ const LobbyInfo = props => {
     }
   }, [adminAction]);
 
+  React.useEffect(() => {
+    setIsAllowedToShowResults(cardMessages.length === players.length);
+  }, [cardMessages])
+
   const handleShowResults = () => {
-    showResults();
-    setShowingResults(true);
+    if (isAllowedToShowResults) {
+      showResults();
+      setShowingResults(true);
+    } else {
+      toast()
+        .danger('Oops!', 'You must wait until every player choose a card.')
+        .for(1500)
+        .show();
+    }
   };
 
   const handleClearResults = () => {
@@ -111,6 +124,7 @@ const LobbyInfo = props => {
 
   const handleChangeCard = () => {
     setCardChosen(null);
+    sendCardMessage(null);
     setCardConfirmed(false);
   }
 
@@ -247,17 +261,23 @@ const LobbyInfo = props => {
         </div>
       )}
 
-      <ActionMenu 
+      <ActionMenu
         players={players}
-        isPlayerAdminInLobby={isPlayerAdminInLobby} 
+        isPlayerAdminInLobby={isPlayerAdminInLobby}
         showingResults={showingResults}
         gameStarted={gameStarted}
+        isAllowedToShowResults={isAllowedToShowResults}
         handleAdminStartGame={handleAdminStartGame}
         handleHideResults={handleHideResults}
         handleClearResults={handleClearResults}
         handleResetGame={handleResetGame}
-        handleShowResults={handleShowResults}/>
+        handleShowResults={handleShowResults} />
 
+      <ResultList
+        players={players}
+        cardMessages={cardMessages}
+        showingResults={showingResults}
+        setShowingResults={setShowingResults} />
 
       {
         isPlayerAdminInLobby(userLogged.id) && (

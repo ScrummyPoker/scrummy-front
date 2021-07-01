@@ -37,7 +37,7 @@ const WaitingList = ({
                 </div>
               </div>
 
-              <div className="text-center relative">
+              <div className="text-right relative m-2">
                 <div className={clsx(
                   "absolute mx-auto top-1.5 w-3 h-3 inline-block rounded-full",
                   playerReady ? "bg-green-500" : "bg-red-500"

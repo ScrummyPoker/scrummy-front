@@ -123,15 +123,22 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
       const newCards = [...prevMessages];
       const actualPlayerIndex = newCards.findIndex(
         t => t.player.id === newCardData.player.id,
-      );
+        );
+        
+        if (actualPlayerIndex > -1) {
+          //if new card is valid, change actual players's data
+          if (newCardData.cardChosen) {
+            newCards[actualPlayerIndex] = newCardData;
+          } 
+          //if it's not valid (changing card), then remove from list
+          else {
+            newCards.splice(actualPlayerIndex, 1);
+          }
+        } else {
+          newCards.push({ ...newCardData });
+        }
 
-      if (actualPlayerIndex > -1) {
-        newCards[actualPlayerIndex] = newCardData;
-      } else {
-        newCards.push({ ...newCardData });
-      }
-
-      return newCards;
+        return newCards;
     });
   };
 

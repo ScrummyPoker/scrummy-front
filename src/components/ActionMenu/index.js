@@ -47,34 +47,16 @@ const ActionMenu = ({
               </FlatButton>
             </div>
           )}
-
-          {showingResults ? (
-            <>
-              <div>
-                <FlatButton onClick={handleHideResults} icon={EyeOffIcon} vertical>
-                  <div>HIDE RESULTS</div>
-                </FlatButton>
-              </div>
-
-              <div>
-                <FlatButton onClick={handleClearResults} icon={BadgeCheckIcon} vertical>
-                  <div>NEW ROUND</div>
-                </FlatButton>
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <FlatButton onClick={handleShowResults} icon={EyeIcon} vertical>
-                  <div>SHOW RESULTS</div>
-                </FlatButton>
-              </div>
-              <div>
-
-              </div>
-            </>
-          )}
-
+          <div>
+            <FlatButton onClick={handleShowResults} icon={EyeIcon} vertical>
+              <div>SHOW RESULTS</div>
+            </FlatButton>
+          </div>
+          <div>
+            <FlatButton onClick={handleClearResults} icon={BadgeCheckIcon} vertical>
+              <div>NEW ROUND</div>
+            </FlatButton>
+          </div>
           <div>
             <FlatButton onClick={toggleShowingPlayers} icon={UsersIcon} vertical>
               <div>PLAYERS</div>

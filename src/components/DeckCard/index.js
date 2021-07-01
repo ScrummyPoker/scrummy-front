@@ -11,7 +11,7 @@ const DeckCard = ({
 }) => (
   <>
     <div className={clsx(
-        "bg-white shadow-md hover:shadow-lg rounded-lg my-2 transition",
+        "mx-auto bg-white shadow-md hover:shadow-lg rounded-lg my-2 transition",
         small ? "p-1 w-20" : "p-2 w-full"
       )}
 
