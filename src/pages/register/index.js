@@ -91,7 +91,7 @@ const RegisterPage = props => {
           name="name"
           type={'text'}
           placeholder={'ex: gabriel toledo'}
-          onChange={() => handelFormChange}
+          onChange={handelFormChange}
         />
       </div>
 
@@ -101,7 +101,7 @@ const RegisterPage = props => {
           name="email"
           type={'email'}
           placeholder={'ex: fallen@email.com'}
-          onChange={() => handelFormChange}
+          onChange={handelFormChange}
         />
       </div>
       <div>
@@ -110,15 +110,15 @@ const RegisterPage = props => {
           name="password"
           type={'password'}
           placeholder={'*******'}
-          onKeyPress={() => handleKeyPress}
-          onChange={() => handelFormChange}
+          onKeyPress={handleKeyPress}
+          onChange={handelFormChange}
         />
       </div>
 
       <Button 
         primary
         isLoading={isLoading} 
-        onClick={() => handleRegister}>
+        onClick={handleRegister}>
         Create account
       </Button>
 

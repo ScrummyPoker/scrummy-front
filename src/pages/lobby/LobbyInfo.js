@@ -201,54 +201,56 @@ const LobbyInfo = props => {
 
               </div>
             ) : (
-              <div className="decks-container my-10 pb-24" >
-                {cardChosen !== null ? (
-                  //TODO HOC
-                  <div>
-                    <div className="grid grid-cols-6 md:grid-cols-5 lg:grid-cols-6">
-                      <div
-                        className={clsx(
-                          "col-start-3 col-span-2",
-                          "md:col-start-2 md:col-span-3",
-                          "lg:col-start-3 lg:col-span-2"
+              <div className="pb-64">
+                <div className="decks-container relative my-10" >
+                  {cardChosen !== null ? (
+                    //TODO HOC
+                    <div>
+                      <div className="grid grid-cols-6 md:grid-cols-5 lg:grid-cols-6">
+                        <div
+                          className={clsx(
+                            "col-start-3 col-span-2",
+                            "md:col-start-2 md:col-span-3",
+                            "lg:col-start-3 lg:col-span-2"
 
-                        )}>
-                        <DeckCard
-                          value={cardChosen}
-                          type="button"
-                          href="#"
-                          onClick={() => { }} />
+                          )}>
+                          <DeckCard
+                            value={cardChosen}
+                            type="button"
+                            href="#"
+                            onClick={() => { }} />
+                        </div>
+                      </div>
+                      <div className="absolute -bottom-36 mt-10 w-full">
+                        <Button
+                          small
+                          alternative
+                          icon={CheckIcon}
+                          onClick={toggleCardConfirmation}>Confirm Card</Button>
+
+                        <Button
+                          primary
+                          icon={SwitchHorizontalIcon}
+                          onClick={handleChangeCard}>Change Card</Button>
                       </div>
                     </div>
-                    <div className="absolute bottom-0 w-full">
-                      <Button
-                        small
-                        alternative
-                        icon={CheckIcon}
-                        onClick={toggleCardConfirmation}>Confirm Card</Button>
-
-                      <Button
-                        primary
-                        icon={SwitchHorizontalIcon}
-                        onClick={handleChangeCard}>Change Card</Button>
+                  ) : (
+                    //TODO HOC
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                      {[...new Set(getFibonacci(8))].map(index => (
+                        <DeckCard
+                          key={index}
+                          value={index}
+                          type="button"
+                          href="#"
+                          onClick={() => setCardChosen(index)} />
+                      ))}
                     </div>
-                  </div>
-                ) : (
-                  //TODO HOC
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    {[...new Set(getFibonacci(8))].map(index => (
-                      <DeckCard
-                        key={index}
-                        value={index}
-                        type="button"
-                        href="#"
-                        onClick={() => setCardChosen(index)} />
-                    ))}
-                  </div>
-                )}
+                  )}
 
-
+                </div>
               </div>
+
             )
           }
         </>

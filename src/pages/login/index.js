@@ -98,7 +98,7 @@ const LoginPage = props => {
           type={'password'}
           placeholder={'*******'}
           autoComplete={'off'}
-          onKeyPress={() => handleKeyPress}
+          onKeyPress={handleKeyPress}
           onChange={handelFormChange}
         />
       </div>
