@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { getFibonacci } from '../../constants/Fibonacci';
-import { UserIcon, CheckIcon, SwitchHorizontalIcon, UsersIcon } from '@heroicons/react/solid';
+import { UserIcon, CheckIcon, SwitchHorizontalIcon, CollectionIcon, ClipboardIcon, ExternalLinkIcon, EmojiHappyIcon } from '@heroicons/react/solid';
 import useLobbySocket from './useLobbySocket';
 import { getUserLogged } from '../../services/auth';
 import Card from '../../components/Card';
@@ -13,6 +13,12 @@ import PlayersPanel from './PlayersPanel';
 import ResultList from '../../components/ResultList';
 import { useLobby, LobbyContext } from './context';
 import { useParams } from 'react-router-dom';
+import SectionTitle from '../../components/SectionTitle';
+import { copyToClipboard } from '../../utils/general';
+import LobbyActions from './LobbyActions';
+import ActionMenu from '../../components/ActionMenu';
+import WaitingList from '../../components/WaitingList';
+import { toast } from 'tailwind-toast';
 
 const LobbyInfo = props => {
   const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
@@ -81,7 +87,7 @@ const LobbyInfo = props => {
   const handleResetGame = () => {
     stopGame();
   };
-  
+
   const handleGameStopped = () => {
     setGameStarted(false);
     setShowingResults(false);
@@ -112,9 +118,21 @@ const LobbyInfo = props => {
     return lobbyData ? lobbyData.admins.indexOf(playerId) > -1 : 0;
   };
 
+  const handleCopyToClipboard = () => {
+    copyToClipboard();
+
+    toast()
+      .success('', 'Copied to clipboard!')
+      .for(1500)
+      .show();
+  }
+
+
   return (
     <div className="relative chat-room-container">
-      {lobbyData && (
+      <div className={"mb-10"}>
+
+        <SectionTitle icon={CollectionIcon} title="Lobby Information" />
         <Card>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -131,16 +149,33 @@ const LobbyInfo = props => {
             </div>
           </div>
         </Card>
-      )}
+      </div>
 
-      {gameStarted && (
+      <div>
+        <SectionTitle icon={ExternalLinkIcon} title="Invite players" />
+        <div className="grid grid-cols-6 flex text-center items-center">
+
+          <div className="col-span-5">
+            <Card>
+              <p className="truncate text-left">{location.href}</p>
+            </Card>
+          </div>
+          <div className="col-span-1 text-right">
+            <IconButton
+              primary
+              Icon={ClipboardIcon}
+              onClick={handleCopyToClipboard}>COPY URL</IconButton>
+          </div>
+        </div>
+      </div>
+
+      {gameStarted ? (
         <>
           {
             cardConfirmed ? (
               <div>
-                <ResultList 
+                <WaitingList
                   players={players}
-                  showingResults={showingResults}
                   cardMessages={cardMessages} />
 
                 {showingResults !== true && (
@@ -149,7 +184,7 @@ const LobbyInfo = props => {
                     icon={SwitchHorizontalIcon}
                     onClick={handleChangeCard}>Change Card</Button>
                 )}
-                
+
               </div>
             ) : (
               <div className="decks-container my-10 pb-24" >
@@ -203,15 +238,26 @@ const LobbyInfo = props => {
             )
           }
         </>
-
+      ) : (
+        <div className="mt-20">
+          <div>
+            <EmojiHappyIcon className="w-8 h-8 text-gray-500 animate-bounce mx-auto" />
+          </div>
+          <div className="text-center text-sm text-gray-500 animate-pulse">Waiting for lobby admin...</div>
+        </div>
       )}
 
+      <ActionMenu 
+        players={players}
+        isPlayerAdminInLobby={isPlayerAdminInLobby} 
+        showingResults={showingResults}
+        gameStarted={gameStarted}
+        handleAdminStartGame={handleAdminStartGame}
+        handleHideResults={handleHideResults}
+        handleClearResults={handleClearResults}
+        handleResetGame={handleResetGame}
+        handleShowResults={handleShowResults}/>
 
-      <div>
-        <PlayersPanel
-          players={players}
-          isPlayerAdminInLobby={isPlayerAdminInLobby} />
-      </div>
 
       {
         isPlayerAdminInLobby(userLogged.id) && (

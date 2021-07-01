@@ -19,6 +19,8 @@ const ResultList = ({
       }))
     }
   }, [showingResults, cardMessages]);
+
+
   return (
     <ul className="w-full">
       {players.map((player, i) => (

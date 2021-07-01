@@ -12,6 +12,9 @@ module.exports = {
         "alternativeDarker": "#41BB86",
         "dark": "#2E2E2E"
       },
+      fontSize: {
+        xs: ['11px', '16px'],
+      }
     },
     colors: {
       ...colors,

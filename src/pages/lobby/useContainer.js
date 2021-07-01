@@ -12,6 +12,7 @@ import { ROUTE_DASHBOARD } from '../../utils/routes';
 
 const useContainer = props => {
   const { lobbyCode } = useParams();
+  const userLogged = getUserLogged();
 
   const handleDeleteLobby = () => {
     const deletedLobby = deleteLobbyByCode({

@@ -21,7 +21,7 @@ const Button = ({
       primary && BG_GRADIENT,
       alternative && BG_GRADIENT_ALTERNATIVE,
       transparent && "bg-transparent text-secondary border-orange-400 border-2",
-      small && "py-1 px-2"
+      small && "py-1 px-2 text-xs"
     )}
     {...props}
   >

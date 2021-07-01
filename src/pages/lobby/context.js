@@ -5,6 +5,7 @@ import { getUserLogged } from "../../services/auth";
 export const LobbyContext = React.createContext();
 
 export const LobbyProvider = ({ lobbyData, children }) => {
+
   return (
     <LobbyContext.Provider value={{ lobbyData }}>
       {children}

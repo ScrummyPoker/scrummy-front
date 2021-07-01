@@ -20,31 +20,25 @@ const LobbyPage = props => {
   const [lobbyData, setLobbyData] = React.useState(null);
   const userLogged = getUserLogged();
 
-  const getLobbyData = () => {
-    enterLobbyByCode({
+  const getLobbyData = async () => {
+    const lobbyDataRes = await enterLobbyByCode({
       userId: userLogged.id,
       lobbyCode: lobbyCode,
-    }).then(res => {
-      if (res && !lobbyData) {
-        setLobbyData(res);
-      }
     });
 
+    if (lobbyDataRes && !lobbyData) {
+      setLobbyData(lobbyDataRes);
+    }
   }
 
-  React.useEffect(() => {
-    getLobbyData();
-  }, [lobbyCode]);
-
+  React.useEffect(() => getLobbyData(), [lobbyCode]);
 
   return (
     <>
       {lobbyData ? (
         <LobbyProvider lobbyData={lobbyData} >
-          <div className="w-1/2">
-            <FlatButton onClick={goBack} icon={ChevronLeftIcon}>
-              <div>Back</div>
-            </FlatButton>
+          <div className="">
+           
           </div>
 
           <LobbyInfo />
