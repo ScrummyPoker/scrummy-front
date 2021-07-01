@@ -3,9 +3,7 @@ import Button from '../../components/Button';
 import FlatButton from '../../components/FlatButton';
 import IconButton from '../../components/IconButton';
 import { LockClosedIcon, BadgeCheckIcon, TrashIcon, EyeIcon, EyeOffIcon, LogoutIcon, PlayIcon } from '@heroicons/react/solid';
-import { BottomSheet } from 'react-spring-bottom-sheet'
-import 'react-spring-bottom-sheet/dist/style.css'
-import './style.css';
+
 import { UserAddIcon, UsersIcon } from '@heroicons/react/outline';
 import { useHistory } from "react-router-dom";
 import PlayersPanel from '../../pages/lobby/PlayersPanel';
@@ -13,7 +11,6 @@ import { ROUTE_DASHBOARD } from '../../utils/routes';
 import { getUserLogged } from '../../services/auth';
 
 const ActionMenu = ({
-  players,
   isPlayerAdminInLobby,
   gameStarted,
   showingResults,
@@ -22,13 +19,11 @@ const ActionMenu = ({
   handleClearResults,
   handleResetGame,
   handleShowResults,
-
+  setShowingResults,
+  setShowingPlayers
 }) => {
   const history = useHistory();
 
-  const [isShowing, setIsShowing] = React.useState(false);
-
-  const toggleShowingPlayers = () => setIsShowing(!isShowing);
 
   const goToDashboard = () => history.push(ROUTE_DASHBOARD);
 
@@ -37,8 +32,8 @@ const ActionMenu = ({
       <div className="mx-auto">
         <div className="grid grid-flow-col flex justify-center">
 
-          {isPlayerAdminInLobby(getUserLogged().id) &&
-            <>
+          {isPlayerAdminInLobby ? (
+            <div className="grid grid-flow-col border-0 border-r border-solid border-gray-700">
               {gameStarted ? (
                 <div>
                   <FlatButton onClick={handleResetGame} icon={TrashIcon} vertical>
@@ -63,11 +58,23 @@ const ActionMenu = ({
                   <div>NEW ROUND</div>
                 </FlatButton>
               </div>
+            </div>
+          ) : (
+            // if not admin but lobby is showing card, users can show results
+            <>
+              {showingResults && (
+                <div>
+                  <FlatButton onClick={() => setShowingResults(true)} icon={EyeIcon} vertical>
+                    <div>SHOW RESULTS</div>
+                  </FlatButton>
+                </div>
+
+              )}
             </>
-          }
+          )}
 
           <div>
-            <FlatButton onClick={toggleShowingPlayers} icon={UsersIcon} vertical>
+            <FlatButton onClick={() => setShowingResults(true)} icon={UsersIcon} vertical>
               <div>PLAYERS</div>
             </FlatButton>
           </div>
@@ -79,14 +86,8 @@ const ActionMenu = ({
         </div>
       </div>
 
-      <BottomSheet
-        open={isShowing}
-        snapPoints={({ minHeight }) => minHeight}
-        onDismiss={toggleShowingPlayers}>
-        <PlayersPanel
-          players={players}
-          isPlayerAdminInLobby={isPlayerAdminInLobby} />
-      </BottomSheet>
+      
+     
     </div>
   );
 }

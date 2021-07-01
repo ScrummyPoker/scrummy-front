@@ -3,7 +3,6 @@ import React from 'react';
 import PlayersPanel from '../../pages/lobby/PlayersPanel';
 import DeckCard from '../DeckCard';
 import { BottomSheet } from 'react-spring-bottom-sheet'
-import 'react-spring-bottom-sheet/dist/style.css'
 import SectionTitle from '../SectionTitle';
 
 const ResultList = ({
@@ -12,7 +11,6 @@ const ResultList = ({
   showingResults,
   setShowingResults
 }) => {
-
   return (
     <>
       <BottomSheet
@@ -21,7 +19,7 @@ const ResultList = ({
         onDismiss={() => setShowingResults(false)}>
         <div className="p-5">
           <div className="">
-            <SectionTitle title="PLAYERS RESULTS" icon={ClipboardListIcon} />
+            <SectionTitle centered title="PLAYERS RESULTS" icon={ClipboardListIcon} />
           </div>
           <div className="p-10 my-10">
             <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">

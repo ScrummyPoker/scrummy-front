@@ -16,6 +16,7 @@ import {
 import LobbyPage from './pages/lobby';
 import PublicRoute from './PublicRoute';
 import HomePage from './pages/home';
+import 'react-spring-bottom-sheet/dist/style.css'
 
 function App() {
   return (

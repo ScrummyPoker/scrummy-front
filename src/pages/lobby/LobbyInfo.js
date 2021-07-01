@@ -26,6 +26,7 @@ const LobbyInfo = props => {
   const [cardConfirmed, setCardConfirmed] = React.useState(false);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
+  const [showingPlayers, setShowingPlayers] = React.useState(false);
   const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(false);
 
   const { lobbyCode } = useParams();
@@ -265,16 +266,17 @@ const LobbyInfo = props => {
       )}
 
       <ActionMenu
-        players={players}
-        isPlayerAdminInLobby={isPlayerAdminInLobby}
-        showingResults={showingResults}
+        isPlayerAdminInLobby={isPlayerAdminInLobby(userLogged.id)}
+        showingResults={adminAction && adminAction.action === 'SHOWING_RESULTS'}
         gameStarted={gameStarted}
         isAllowedToShowResults={isAllowedToShowResults}
         handleAdminStartGame={handleAdminStartGame}
         handleHideResults={handleHideResults}
         handleClearResults={handleClearResults}
         handleResetGame={handleResetGame}
-        handleShowResults={handleShowResults} />
+        handleShowResults={handleShowResults} 
+        setShowingResults={setShowingResults}
+        setShowingPlayers={setShowingPlayers} />
 
       <ResultList
         players={players}
@@ -282,20 +284,11 @@ const LobbyInfo = props => {
         showingResults={showingResults}
         setShowingResults={setShowingResults} />
 
-      {
-        isPlayerAdminInLobby(userLogged.id) && (
-          <>
-            <AdminPanel
-              showingResults={showingResults}
-              gameStarted={gameStarted}
-              handleAdminStartGame={handleAdminStartGame}
-              handleHideResults={handleHideResults}
-              handleClearResults={handleClearResults}
-              handleResetGame={handleResetGame}
-              handleShowResults={handleShowResults} />
-          </>
-        )
-      }
+      <PlayersPanel
+        players={players}
+        showingPlayers={showingPlayers}
+        isPlayerAdminInLobby={isPlayerAdminInLobby} 
+        setShowingPlayers={setShowingPlayers} />
     </div >
   );
 };
