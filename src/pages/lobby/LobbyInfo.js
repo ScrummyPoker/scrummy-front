@@ -189,7 +189,7 @@ const LobbyInfo = props => {
         <>
           {
             cardConfirmed ? (
-              <div>
+              <div className={"pb-36"}>
                 <WaitingList
                   players={players}
                   cardMessages={cardMessages} />
@@ -266,6 +266,7 @@ const LobbyInfo = props => {
       )}
 
       <ActionMenu
+        players={players}
         isPlayerAdminInLobby={isPlayerAdminInLobby(userLogged.id)}
         showingResults={adminAction && adminAction.action === 'SHOWING_RESULTS'}
         gameStarted={gameStarted}
@@ -273,7 +274,7 @@ const LobbyInfo = props => {
         handleAdminStartGame={handleAdminStartGame}
         handleHideResults={handleHideResults}
         handleClearResults={handleClearResults}
-        handleResetGame={handleResetGame}
+        handleResetGame={handleResetGame} 
         handleShowResults={handleShowResults} 
         setShowingResults={setShowingResults}
         setShowingPlayers={setShowingPlayers} />

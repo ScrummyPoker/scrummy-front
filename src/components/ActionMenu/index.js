@@ -3,14 +3,15 @@ import Button from '../../components/Button';
 import FlatButton from '../../components/FlatButton';
 import IconButton from '../../components/IconButton';
 import { LockClosedIcon, BadgeCheckIcon, TrashIcon, EyeIcon, EyeOffIcon, LogoutIcon, PlayIcon } from '@heroicons/react/solid';
-
 import { UserAddIcon, UsersIcon } from '@heroicons/react/outline';
 import { useHistory } from "react-router-dom";
 import PlayersPanel from '../../pages/lobby/PlayersPanel';
 import { ROUTE_DASHBOARD } from '../../utils/routes';
 import { getUserLogged } from '../../services/auth';
+import clsx from 'clsx';
 
 const ActionMenu = ({
+  players,
   isPlayerAdminInLobby,
   gameStarted,
   showingResults,
@@ -73,9 +74,17 @@ const ActionMenu = ({
             </>
           )}
 
-          <div>
-            <FlatButton onClick={() => setShowingResults(true)} icon={UsersIcon} vertical>
+          <div className="relative inline-block">
+            <FlatButton onClick={() => setShowingPlayers(true)} icon={UsersIcon} vertical>
               <div>PLAYERS</div>
+              <span class={
+                clsx(
+                  "absolute top-5 right-5 inline-flex items-center justify-center",
+                  "px-1.5 py-1 text-xs  leading-none bg-gray-400 bg-opacity-10 text-secondary font-extrabold",
+                  "transform translate-x-1/2 -translate-y-1/2 rounded-full"
+                )}>
+                {players.length}
+              </span>
             </FlatButton>
           </div>
           <div>

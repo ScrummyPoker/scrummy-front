@@ -4,6 +4,7 @@ import PlayersPanel from '../../pages/lobby/PlayersPanel';
 import DeckCard from '../DeckCard';
 import { BottomSheet } from 'react-spring-bottom-sheet'
 import SectionTitle from '../SectionTitle';
+import BottomDrawer from '../BottomDrawer';
 
 const ResultList = ({
   players,
@@ -13,9 +14,9 @@ const ResultList = ({
 }) => {
   return (
     <>
-      <BottomSheet
+      <BottomDrawer
         open={showingResults}
-        snapPoints={({ minHeight }) => minHeight}
+        snaPoints={({ minHeight }) => minHeight}
         onDismiss={() => setShowingResults(false)}>
         <div className="p-5">
           <div className="">
@@ -43,7 +44,7 @@ const ResultList = ({
             </div>
           </div>
         </div>
-      </BottomSheet>
+      </BottomDrawer>
     </>
   );
 }

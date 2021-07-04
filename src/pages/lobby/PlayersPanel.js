@@ -4,6 +4,7 @@ import IconButton from '../../components/IconButton';
 import clsx from 'clsx';
 import { useSpring, animated } from "react-spring";
 import { BottomSheet } from 'react-spring-bottom-sheet'
+import BottomDrawer from '../../components/BottomDrawer';
 
 const PlayersPanel = ({
   players,
@@ -13,9 +14,8 @@ const PlayersPanel = ({
 }) => {
 
   return (
-    <BottomSheet
+    <BottomDrawer
       open={showingPlayers}
-      snapPoints={({ minHeight }) => minHeight}
       onDismiss={() => setShowingPlayers(false)}>
       <div className="p-2 px-10">
         <h3 className="mb-5">Player connected to lobby:</h3>
@@ -42,9 +42,7 @@ const PlayersPanel = ({
           ))}
         </div>
       </div>
-
-    </BottomSheet>
-
+    </BottomDrawer>
   );
 }
 
