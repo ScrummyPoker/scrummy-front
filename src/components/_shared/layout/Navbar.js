@@ -9,6 +9,7 @@ import {
   ROUTE_AUTH_REGISTER,
   ROUTE_DASHBOARD,
 } from '../../../utils/routes';
+import { ReactComponent as ScrummyLogo } from '../../../assets/img/logo_scrummy.svg';
 
 const Navbar = props => {
   return (
@@ -18,10 +19,7 @@ const Navbar = props => {
           <div className="flex items-center justify-between w-full md:w-auto">
             <a href="#">
               <span className="sr-only">Workflow</span>
-              <img
-                className="h-8 w-auto sm:h-10"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-              />
+              <ScrummyLogo className="h-8 w-auto sm:h-10"/>
             </a>
           </div>
         </div>
