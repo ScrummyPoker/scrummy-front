@@ -19,15 +19,16 @@ import LobbyActions from './LobbyActions';
 import ActionMenu from '../../components/ActionMenu';
 import WaitingList from '../../components/WaitingList';
 import { toast } from 'tailwind-toast';
+import { SEQUENCES, SEQUENCE_DAYS, SEQUENCE_FIBONACCI } from '../../constants/lobby';
 
 const LobbyInfo = props => {
-  const [newMessage, setNewMessage] = React.useState(''); // Message to be sent
   const [cardChosen, setCardChosen] = React.useState(null);
   const [cardConfirmed, setCardConfirmed] = React.useState(false);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
   const [showingPlayers, setShowingPlayers] = React.useState(false);
   const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(false);
+  const [lobbySequence, setLobbySequence] = React.useState(SEQUENCE_DAYS);
 
   const { lobbyCode } = useParams();
   const userLogged = getUserLogged();
@@ -142,7 +143,8 @@ const LobbyInfo = props => {
       .for(1500)
       .show();
   }
-
+  
+  const handleLobbySequence = e => setLobbySequence(e.target.value);
 
   return (
     <div className="relative chat-room-container">
@@ -239,7 +241,7 @@ const LobbyInfo = props => {
                   ) : (
                     //TODO HOC
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                      {[...new Set(getFibonacci(8))].map(index => (
+                      {SEQUENCES[lobbySequence].map(index => (
                         <DeckCard
                           key={index}
                           value={index}
@@ -257,11 +259,43 @@ const LobbyInfo = props => {
           }
         </>
       ) : (
-        <div className="mt-20">
+        <div className="mt-5">
           <div>
-            <EmojiHappyIcon className="w-8 h-8 text-gray-500 animate-bounce mx-auto" />
+            <SectionTitle icon={CollectionIcon} title="Sequence" />
+            <div className="mt-2">
+              <div className="items-center">
+                <input type="radio" 
+                  className="form-radio" 
+                  id="DaysSequence" 
+                  name="lobbySequence" 
+                  value={SEQUENCE_DAYS}
+                  checked={lobbySequence === SEQUENCE_DAYS}
+                  onChange={handleLobbySequence} />
+                <label className="ml-2" htmlFor="DaysSequence">
+                  [{SEQUENCES[SEQUENCE_DAYS].join(', ').toString()}]
+                </label>
+              </div>
+              <div className="items-center mt-4">
+                <input 
+                  type="radio" 
+                  className="form-radio" 
+                  id="FibonacciSequence" 
+                  name="lobbySequence"
+                  checked={lobbySequence === SEQUENCE_FIBONACCI}
+                  value={SEQUENCE_FIBONACCI}
+                  onChange={handleLobbySequence} />
+                <label className="ml-2" htmlFor="FibonacciSequence">
+                  [{SEQUENCES[SEQUENCE_FIBONACCI].join(', ').toString()}]
+                </label>
+              </div>
+            </div>
           </div>
-          <div className="text-center text-sm text-gray-500 animate-pulse">Waiting for lobby admin...</div>
+          <div className="mt-20">
+            <div>
+              <EmojiHappyIcon className="w-8 h-8 text-gray-500 animate-bounce mx-auto" />
+            </div>
+            <div className="text-center text-sm text-gray-500 animate-pulse">Waiting for lobby admin...</div>
+          </div>
         </div>
       )}
 
@@ -274,8 +308,8 @@ const LobbyInfo = props => {
         handleAdminStartGame={handleAdminStartGame}
         handleHideResults={handleHideResults}
         handleClearResults={handleClearResults}
-        handleResetGame={handleResetGame} 
-        handleShowResults={handleShowResults} 
+        handleResetGame={handleResetGame}
+        handleShowResults={handleShowResults}
         setShowingResults={setShowingResults}
         setShowingPlayers={setShowingPlayers} />
 
@@ -288,7 +322,7 @@ const LobbyInfo = props => {
       <PlayersPanel
         players={players}
         showingPlayers={showingPlayers}
-        isPlayerAdminInLobby={isPlayerAdminInLobby} 
+        isPlayerAdminInLobby={isPlayerAdminInLobby}
         setShowingPlayers={setShowingPlayers} />
     </div >
   );

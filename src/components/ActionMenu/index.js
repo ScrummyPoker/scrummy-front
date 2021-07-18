@@ -77,7 +77,7 @@ const ActionMenu = ({
           <div className="relative inline-block">
             <FlatButton onClick={() => setShowingPlayers(true)} icon={UsersIcon} vertical>
               <div>PLAYERS</div>
-              <span class={
+              <span className={
                 clsx(
                   "absolute top-5 right-5 inline-flex items-center justify-center",
                   "px-1.5 py-1 text-xs  leading-none bg-gray-400 bg-opacity-10 text-secondary font-extrabold",

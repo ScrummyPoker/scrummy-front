@@ -22,10 +22,10 @@ const PlayersPanel = ({
         <div className="grid grid-cols-4 md:grid-cols-8 gap-5 py-10">
           {players.map((player, i) => (
             <div key={i} className="text-center">
-              <div class="relative inline-block">
+              <div className="relative inline-block">
                 <UserIcon width={30} className="mx-auto" />
                 {isPlayerAdminInLobby(player.id) && (
-                  <span class={
+                  <span className={
                     clsx(
                       "absolute top-0 right-0 inline-flex items-center justify-center",
                       "px-2 py-1 text-xs font-bold leading-none text-yellow",
