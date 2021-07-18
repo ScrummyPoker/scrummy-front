@@ -3,6 +3,7 @@ import { toast } from 'tailwind-toast';
 import { postRegister } from '../../api/auth';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import { loginUser } from '../../services/auth';
 import { ROUTE_AUTH_LOGIN, ROUTE_DASHBOARD } from '../../utils/routes';
 
 const RegisterPage = props => {
