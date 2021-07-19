@@ -28,7 +28,6 @@ const LobbyInfo = props => {
   const [showingResults, setShowingResults] = React.useState(false);
   const [showingPlayers, setShowingPlayers] = React.useState(false);
   const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(false);
-  const [lobbySequence, setLobbySequence] = React.useState(SEQUENCE_DAYS);
 
   const { lobbyCode } = useParams();
   const userLogged = getUserLogged();
@@ -48,12 +47,16 @@ const LobbyInfo = props => {
     showResults,
     clearResults,
     hideResults,
+    changeSequence,
+    lobbySequence,
+    setLobbySequence,
   } = useLobbySocket({
     playerId: userLogged.id,
     playerName: userLogged.name,
     lobbyCode
   });
 
+  //HOOKS
   React.useEffect(() => {
     if (adminAction) {
       if (adminAction.action === 'STARTED' && !gameStarted) {
@@ -73,6 +76,7 @@ const LobbyInfo = props => {
       }
 
       if (adminAction.action === 'STOPPED') {
+        sendActualLobbySequence();
         handleGameStopped();
       }
     }
@@ -80,9 +84,15 @@ const LobbyInfo = props => {
 
   React.useEffect(() => {
     setIsAllowedToShowResults(cardMessages.length === players.length);
-  }, [cardMessages])
+  }, [cardMessages]);
 
+  React.useEffect(() => {
+    if(isPlayerAdminInLobby(userLogged.id)) {
+      sendActualLobbySequence();
+    }
+  }, [players]);
 
+  //methods
   const handleShowResults = () => {
     if (isAllowedToShowResults) {
       showResults();
@@ -144,7 +154,13 @@ const LobbyInfo = props => {
       .show();
   }
   
-  const handleLobbySequence = e => setLobbySequence(e.target.value);
+  const handleLobbySequence = e => {
+    setLobbySequence(e.target.value);
+    changeSequence(e.target.value);
+  }
+  const sendActualLobbySequence = () => {
+    handleLobbySequence({ target: { value: lobbySequence }});
+  }
 
   return (
     <div className="relative chat-room-container">
