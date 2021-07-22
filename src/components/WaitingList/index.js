@@ -15,7 +15,7 @@ const WaitingList = ({
     }));
   }, [cardMessages]);
 
-  const isPlayerReadyToShowCard = (player) => resultsSorted.find(t => t.player.id === player.id);
+  const isPlayerReadyToShowCard = (player) => resultsSorted.find(t => t.player.id === player.id && !!t.cardChosen);
 
   return (
     <ul className="w-full">

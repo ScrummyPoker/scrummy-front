@@ -83,7 +83,12 @@ const LobbyInfo = props => {
   }, [adminAction]);
 
   React.useEffect(() => {
-    setIsAllowedToShowResults(cardMessages.length === players.length);
+    const isAllowed = (
+      cardMessages.length === players.length && 
+      !!cardMessages.find(t => t.player.id === userLogged.id)?.cardChosen
+    );
+
+    setIsAllowedToShowResults(isAllowed);
   }, [cardMessages]);
 
   React.useEffect(() => {
