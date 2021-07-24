@@ -114,7 +114,7 @@ const RegisterPage = props => {
           onKeyPress={handleKeyPress}
           onChange={handelFormChange}
         />
-        <em className="text-xs">*min 6 characteres</em>
+        <em className="text-xs">*min 8 characteres (1 letter and 1 number)</em>
       </div>
 
       <Button 
