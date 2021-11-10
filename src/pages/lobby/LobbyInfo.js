@@ -42,7 +42,6 @@ const LobbyInfo = props => {
   const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(
     false,
   );
-  const [lobbySequence, setLobbySequence] = React.useState(SEQUENCE_DAYS);
 
   const { lobbyCode } = useParams();
   const userLogged = getUserLogged();
@@ -62,12 +61,16 @@ const LobbyInfo = props => {
     showResults,
     clearResults,
     hideResults,
+    changeSequence,
+    lobbySequence,
+    setLobbySequence,
   } = useLobbySocket({
     playerId: userLogged.id,
     playerName: userLogged.name,
     lobbyCode,
   });
 
+  //HOOKS
   React.useEffect(() => {
     if (adminAction) {
       if (adminAction.action === 'STARTED' && !gameStarted) {
@@ -87,15 +90,27 @@ const LobbyInfo = props => {
       }
 
       if (adminAction.action === 'STOPPED') {
+        sendActualLobbySequence();
         handleGameStopped();
       }
     }
   }, [adminAction]);
 
   React.useEffect(() => {
-    setIsAllowedToShowResults(cardMessages.length === players.length);
+    const isAllowed =
+      cardMessages.length === players.length &&
+      !!cardMessages.find(t => t.player.id === userLogged.id)?.cardChosen;
+
+    setIsAllowedToShowResults(isAllowed);
   }, [cardMessages]);
 
+  React.useEffect(() => {
+    if (isPlayerAdminInLobby(userLogged.id)) {
+      sendActualLobbySequence();
+    }
+  }, [players]);
+
+  //methods
   const handleShowResults = () => {
     if (isAllowedToShowResults) {
       showResults();
@@ -154,7 +169,13 @@ const LobbyInfo = props => {
     toast().success('', 'Copied to clipboard!').for(1500).show();
   };
 
-  const handleLobbySequence = e => setLobbySequence(e.target.value);
+  const handleLobbySequence = e => {
+    setLobbySequence(e.target.value);
+    changeSequence(e.target.value);
+  };
+  const sendActualLobbySequence = () => {
+    handleLobbySequence({ target: { value: lobbySequence } });
+  };
 
   return (
     <div className="relative chat-room-container">
@@ -275,38 +296,44 @@ const LobbyInfo = props => {
         </>
       ) : (
         <div className="mt-5">
-          <div>
-            <SectionTitle icon={CollectionIcon} title="Sequence" />
-            <div className="mt-2">
-              <div className="items-center">
-                <input
-                  type="radio"
-                  className="form-radio"
-                  id="DaysSequence"
-                  name="lobbySequence"
-                  value={SEQUENCE_DAYS}
-                  checked={lobbySequence === SEQUENCE_DAYS}
-                  onChange={handleLobbySequence}
-                />
-                <label className="ml-2" htmlFor="DaysSequence">
-                  [{SEQUENCES[SEQUENCE_DAYS].join(', ').toString()}]
-                </label>
+          <div className="pt-2 relative">
+            <SectionTitle icon={CollectionIcon} title="Deck Cards" />
+            {isPlayerAdminInLobby(userLogged.id) ? (
+              <div className="pb-2">
+                <div className="items-center">
+                  <input
+                    type="radio"
+                    className="form-radio"
+                    id="DaysSequence"
+                    name="lobbySequence"
+                    value={SEQUENCE_DAYS}
+                    checked={lobbySequence === SEQUENCE_DAYS}
+                    onChange={handleLobbySequence}
+                    disabled={!isPlayerAdminInLobby(userLogged.id)}
+                  />
+                  <label className="ml-2" htmlFor="DaysSequence">
+                    [{SEQUENCES[SEQUENCE_DAYS].join(', ').toString()}]
+                  </label>
+                </div>
+                <div className="items-center mt-4">
+                  <input
+                    type="radio"
+                    className="form-radio"
+                    id="FibonacciSequence"
+                    name="lobbySequence"
+                    checked={lobbySequence === SEQUENCE_FIBONACCI}
+                    value={SEQUENCE_FIBONACCI}
+                    onChange={handleLobbySequence}
+                    disabled={!isPlayerAdminInLobby(userLogged.id)}
+                  />
+                  <label className="ml-2" htmlFor="FibonacciSequence">
+                    [{SEQUENCES[SEQUENCE_FIBONACCI].join(', ').toString()}]
+                  </label>
+                </div>
               </div>
-              <div className="items-center mt-4">
-                <input
-                  type="radio"
-                  className="form-radio"
-                  id="FibonacciSequence"
-                  name="lobbySequence"
-                  checked={lobbySequence === SEQUENCE_FIBONACCI}
-                  value={SEQUENCE_FIBONACCI}
-                  onChange={handleLobbySequence}
-                />
-                <label className="ml-2" htmlFor="FibonacciSequence">
-                  [{SEQUENCES[SEQUENCE_FIBONACCI].join(', ').toString()}]
-                </label>
-              </div>
-            </div>
+            ) : (
+              <div>[{SEQUENCES[lobbySequence].join(', ').toString()}]</div>
+            )}
           </div>
           <div className="mt-20">
             <div>

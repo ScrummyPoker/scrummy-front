@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { SEQUENCE_DAYS } from '../../constants/lobby';
 import { getUserLogged } from '../../services/auth';
 
 const JOIN_LOBBY = 'joinLobby';
@@ -11,7 +12,7 @@ const ADMIN_ACTION = 'adminAction';
 const CARD_MESSAGE_EVENT = 'cardMessage';
 const LOBBY_MESSAGE_EVENT = 'lobbyMessage';
 const LOBBY_PLAYER_UPDATE = 'playerUpdate';
-
+const LOBBY_CHANGE_SEQUENCE = 'changeSequence';
 
 const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
   const [messages, setMessages] = useState([]);
@@ -19,9 +20,12 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
   const [players, setPlayers] = useState([]);
   const [lobbyInfo, setLobbyInfo] = useState(null);
   const [adminAction, setAdminAction] = useState(null);
+  const [lobbySequence, setLobbySequence] = React.useState(SEQUENCE_DAYS);
+
   const socketRef = useRef();
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_SOCKET_URL);
     // Creates a WebSocket connection
     socketRef.current = io(process.env.REACT_APP_SOCKET_URL, {
       query: { lobbyCode },
@@ -67,6 +71,10 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
       setLobbyInfo(lobbyInfo);
     });
 
+    socketRef.current.on(LOBBY_CHANGE_SEQUENCE, ({ sequence }) => {
+      setLobbySequence(sequence);
+    });
+
     // Destroys the socket reference
     // when the connection is closed
     return () => {
@@ -108,6 +116,10 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
 
   const hideResults = () => {
     emitAdminAction('HIDE_RESULTS');
+  };
+
+  const changeSequence = sequence => {
+    socketRef.current.emit(LOBBY_CHANGE_SEQUENCE, { sequence });
   };
 
   const emitAdminAction = action => {
@@ -154,6 +166,9 @@ const useLobbySocket = ({ playerId, playerName, lobbyCode }) => {
     showResults,
     clearResults,
     hideResults,
+    changeSequence,
+    lobbySequence,
+    setLobbySequence,
   };
 };
 
