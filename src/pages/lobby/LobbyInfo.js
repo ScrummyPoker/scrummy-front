@@ -1,6 +1,14 @@
 import React, { useContext } from 'react';
 import { getFibonacci } from '../../constants/Fibonacci';
-import { UserIcon, CheckIcon, SwitchHorizontalIcon, CollectionIcon, ClipboardIcon, ExternalLinkIcon, EmojiHappyIcon } from '@heroicons/react/solid';
+import {
+  UserIcon,
+  CheckIcon,
+  SwitchHorizontalIcon,
+  CollectionIcon,
+  ClipboardIcon,
+  ExternalLinkIcon,
+  EmojiHappyIcon,
+} from '@heroicons/react/solid';
 import useLobbySocket from './useLobbySocket';
 import { getUserLogged } from '../../services/auth';
 import Card from '../../components/Card';
@@ -19,7 +27,11 @@ import LobbyActions from './LobbyActions';
 import ActionMenu from '../../components/ActionMenu';
 import WaitingList from '../../components/WaitingList';
 import { toast } from 'tailwind-toast';
-import { SEQUENCES, SEQUENCE_DAYS, SEQUENCE_FIBONACCI } from '../../constants/lobby';
+import {
+  SEQUENCES,
+  SEQUENCE_DAYS,
+  SEQUENCE_FIBONACCI,
+} from '../../constants/lobby';
 
 const LobbyInfo = props => {
   const [cardChosen, setCardChosen] = React.useState(null);
@@ -27,7 +39,9 @@ const LobbyInfo = props => {
   const [gameStarted, setGameStarted] = React.useState(false);
   const [showingResults, setShowingResults] = React.useState(false);
   const [showingPlayers, setShowingPlayers] = React.useState(false);
-  const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(false);
+  const [isAllowedToShowResults, setIsAllowedToShowResults] = React.useState(
+    false,
+  );
   const [lobbySequence, setLobbySequence] = React.useState(SEQUENCE_DAYS);
 
   const { lobbyCode } = useParams();
@@ -51,7 +65,7 @@ const LobbyInfo = props => {
   } = useLobbySocket({
     playerId: userLogged.id,
     playerName: userLogged.name,
-    lobbyCode
+    lobbyCode,
   });
 
   React.useEffect(() => {
@@ -80,8 +94,7 @@ const LobbyInfo = props => {
 
   React.useEffect(() => {
     setIsAllowedToShowResults(cardMessages.length === players.length);
-  }, [cardMessages])
-
+  }, [cardMessages]);
 
   const handleShowResults = () => {
     if (isAllowedToShowResults) {
@@ -108,7 +121,7 @@ const LobbyInfo = props => {
     setGameStarted(false);
     setShowingResults(false);
     handleChangeCard();
-  }
+  };
 
   const handleHideResults = () => {
     hideResults();
@@ -123,33 +136,29 @@ const LobbyInfo = props => {
   const toggleCardConfirmation = () => {
     setCardConfirmed(!cardConfirmed);
     sendCardMessage(cardChosen);
-  }
+  };
 
   const handleChangeCard = () => {
     setCardChosen(null);
     sendCardMessage(null);
     setCardConfirmed(false);
-  }
+  };
 
-  const isPlayerAdminInLobby = (playerId) => {
+  const isPlayerAdminInLobby = playerId => {
     return lobbyData ? lobbyData.admins.indexOf(playerId) > -1 : 0;
   };
 
   const handleCopyToClipboard = () => {
     copyToClipboard();
 
-    toast()
-      .success('', 'Copied to clipboard!')
-      .for(1500)
-      .show();
-  }
-  
+    toast().success('', 'Copied to clipboard!').for(1500).show();
+  };
+
   const handleLobbySequence = e => setLobbySequence(e.target.value);
 
   return (
     <div className="relative chat-room-container">
-      <div className={"mb-10"}>
-
+      <div className={'mb-10'}>
         <SectionTitle icon={CollectionIcon} title="Lobby Information" />
         <Card>
           <div className="grid grid-cols-2 gap-3">
@@ -172,7 +181,6 @@ const LobbyInfo = props => {
       <div>
         <SectionTitle icon={ExternalLinkIcon} title="Invite players" />
         <div className="grid grid-cols-6 flex text-center items-center">
-
           <div className="col-span-5">
             <Card>
               <p className="truncate text-left">{location.href}</p>
@@ -182,81 +190,88 @@ const LobbyInfo = props => {
             <IconButton
               primary
               Icon={ClipboardIcon}
-              onClick={handleCopyToClipboard}>COPY URL</IconButton>
+              onClick={handleCopyToClipboard}
+            >
+              COPY URL
+            </IconButton>
           </div>
         </div>
       </div>
 
       {gameStarted ? (
         <>
-          {
-            cardConfirmed ? (
-              <div className={"pb-36"}>
-                <WaitingList
-                  players={players}
-                  cardMessages={cardMessages} />
+          {cardConfirmed ? (
+            <div className={'pb-36'}>
+              <WaitingList players={players} cardMessages={cardMessages} />
 
-                {showingResults !== true && (
-                  <Button
-                    primary
-                    icon={SwitchHorizontalIcon}
-                    onClick={handleChangeCard}>Change Card</Button>
-                )}
-
-              </div>
-            ) : (
-              <div className="pb-64">
-                <div className="decks-container relative my-10" >
-                  {cardChosen !== null ? (
-                    //TODO HOC
-                    <div>
-                      <div className="grid grid-cols-6 md:grid-cols-5 lg:grid-cols-6">
-                        <div
-                          className={clsx(
-                            "col-start-3 col-span-2",
-                            "md:col-start-2 md:col-span-3",
-                            "lg:col-start-3 lg:col-span-2"
-
-                          )}>
-                          <DeckCard
-                            value={cardChosen}
-                            type="button"
-                            href="#"
-                            onClick={() => { }} />
-                        </div>
-                      </div>
-                      <div className="absolute -bottom-36 mt-10 w-full">
-                        <Button
-                          small
-                          alternative
-                          icon={CheckIcon}
-                          onClick={toggleCardConfirmation}>Confirm Card</Button>
-
-                        <Button
-                          primary
-                          icon={SwitchHorizontalIcon}
-                          onClick={handleChangeCard}>Change Card</Button>
-                      </div>
-                    </div>
-                  ) : (
-                    //TODO HOC
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                      {SEQUENCES[lobbySequence].map(index => (
+              {showingResults !== true && (
+                <Button
+                  primary
+                  icon={SwitchHorizontalIcon}
+                  onClick={handleChangeCard}
+                >
+                  Change Card
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="pb-64">
+              <div className="decks-container relative my-10">
+                {cardChosen !== null ? (
+                  //TODO HOC
+                  <div>
+                    <div className="grid grid-cols-6 md:grid-cols-5 lg:grid-cols-6">
+                      <div
+                        className={clsx(
+                          'col-start-3 col-span-2',
+                          'md:col-start-2 md:col-span-3',
+                          'lg:col-start-3 lg:col-span-2',
+                        )}
+                      >
                         <DeckCard
-                          key={index}
-                          value={index}
+                          value={cardChosen}
                           type="button"
                           href="#"
-                          onClick={() => setCardChosen(index)} />
-                      ))}
+                          onClick={() => {}}
+                        />
+                      </div>
                     </div>
-                  )}
+                    <div className="absolute -bottom-36 mt-10 w-full">
+                      <Button
+                        small
+                        alternative
+                        icon={CheckIcon}
+                        onClick={toggleCardConfirmation}
+                      >
+                        Confirm Card
+                      </Button>
 
-                </div>
+                      <Button
+                        primary
+                        icon={SwitchHorizontalIcon}
+                        onClick={handleChangeCard}
+                      >
+                        Change Card
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  //TODO HOC
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                    {SEQUENCES[lobbySequence].map(index => (
+                      <DeckCard
+                        key={index}
+                        value={index}
+                        type="button"
+                        href="#"
+                        onClick={() => setCardChosen(index)}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-
-            )
-          }
+            </div>
+          )}
         </>
       ) : (
         <div className="mt-5">
@@ -264,26 +279,29 @@ const LobbyInfo = props => {
             <SectionTitle icon={CollectionIcon} title="Sequence" />
             <div className="mt-2">
               <div className="items-center">
-                <input type="radio" 
-                  className="form-radio" 
-                  id="DaysSequence" 
-                  name="lobbySequence" 
+                <input
+                  type="radio"
+                  className="form-radio"
+                  id="DaysSequence"
+                  name="lobbySequence"
                   value={SEQUENCE_DAYS}
                   checked={lobbySequence === SEQUENCE_DAYS}
-                  onChange={handleLobbySequence} />
+                  onChange={handleLobbySequence}
+                />
                 <label className="ml-2" htmlFor="DaysSequence">
                   [{SEQUENCES[SEQUENCE_DAYS].join(', ').toString()}]
                 </label>
               </div>
               <div className="items-center mt-4">
-                <input 
-                  type="radio" 
-                  className="form-radio" 
-                  id="FibonacciSequence" 
+                <input
+                  type="radio"
+                  className="form-radio"
+                  id="FibonacciSequence"
                   name="lobbySequence"
                   checked={lobbySequence === SEQUENCE_FIBONACCI}
                   value={SEQUENCE_FIBONACCI}
-                  onChange={handleLobbySequence} />
+                  onChange={handleLobbySequence}
+                />
                 <label className="ml-2" htmlFor="FibonacciSequence">
                   [{SEQUENCES[SEQUENCE_FIBONACCI].join(', ').toString()}]
                 </label>
@@ -294,7 +312,9 @@ const LobbyInfo = props => {
             <div>
               <EmojiHappyIcon className="w-8 h-8 text-gray-500 animate-bounce mx-auto" />
             </div>
-            <div className="text-center text-sm text-gray-500 animate-pulse">Waiting for lobby admin...</div>
+            <div className="text-center text-sm text-gray-500 animate-pulse">
+              Waiting for lobby admin...
+            </div>
           </div>
         </div>
       )}
@@ -311,20 +331,23 @@ const LobbyInfo = props => {
         handleResetGame={handleResetGame}
         handleShowResults={handleShowResults}
         setShowingResults={setShowingResults}
-        setShowingPlayers={setShowingPlayers} />
+        setShowingPlayers={setShowingPlayers}
+      />
 
       <ResultList
         players={players}
         cardMessages={cardMessages}
         showingResults={showingResults}
-        setShowingResults={setShowingResults} />
+        setShowingResults={setShowingResults}
+      />
 
       <PlayersPanel
         players={players}
         showingPlayers={showingPlayers}
         isPlayerAdminInLobby={isPlayerAdminInLobby}
-        setShowingPlayers={setShowingPlayers} />
-    </div >
+        setShowingPlayers={setShowingPlayers}
+      />
+    </div>
   );
 };
 
